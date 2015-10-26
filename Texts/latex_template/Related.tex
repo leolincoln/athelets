@@ -1,0 +1,51 @@
+There are two main bodies of research literature that are related to, and were used as
+foundation for our work.
+
+The first one consists of results from GIS, MOD and spatio-temporal databases communities, where the problem of
+capturing the uncertainty of motion has been studied extensively. Starting with~\cite{hagerstrand},
+and more recently~\cite{WinterY10}, the issue of uncertain whereabouts from the perspective
+of probabilistic time geography has been tackled by a model of emanating cones-in-time, with a
+vertex at the last location sample. The 2D boundary of the possible locations of moving objects with bounded speed was 
+formalized by an ellipse in~\cite{pj99}, and its 2D+time version -- beads -- was presented in~\cite{HornsE02}.
+Subsequently, \cite{Kuijpers11,Kuijpers10} provided a full formalization of the beads model and also
+provided extensions to capture the impact of road networks~\cite{KuijpersMNO10}. Majority of the works
+dealing with uncertainty (either in free-space motion or road networks constrained) from MOD and spatio-temporal databases community 
+have focused on efficient processing of the popular spatio-temporal queries (range, (k)NN, reverse-NN)
+under various models of uncertainty~\cite{GutingS05,ICDE-Tutorial14}.
+
+Unlike majority of the works so far, in this paper we incorporated an additional source of location data -- the 
+roadside sensors, and considered the road network which has a width as a parameter, instead of simple edges.
+
+%%Applying space-time prism on road network is a relatively new research area.
+%%\cite{Kuijpers:road} investigate the effect of bead model in road network to answer the alibi
+%%query. In this work the road network is a graph made of edges and vertices. The experiment 
+%%shows that bead model could fulfill the speed limit constraint of road network and calculate
+%%the space-range given time constraint. However, in this work the width of road is not taken
+%%into consideration. Road network with width is a more complex model that closer to real world
+%%situation. On the road network presented in this paper, the movement of vehicle is not
+%%simply bounded by graph. Adding width into the model introduce one more degree of freedom.
+ 
+%%Traditional road network model consider the data source as a sequence of space-time sample
+%%points. \cite{Kuijpers:2011} extend the bead model to consider the possible acceleration 
+%%during the movement. This work further broaden the complex of the model. 
+%%However, so far there is no published work that consider merging heterogeneous 
+%%data source into a uniform model.
+
+
+The second body of works originates in the transporation and traffic management communities.
+Substantial efforts have been made to tackle the lane-crossing query and 
+several works have focused on building novel system to overcome 
+the shortcoming of single GPS receivers which yields unstable measurements 
+with large uncertainty~\cite{lane_dao,jie_lane}. Attempts have been made to 
+acquire location data using commercially available smartphones~\cite{Sekimoto_lane}, however,
+nearly 50\% of the data failed to fall within the road network region.
+Other efforts include the  use of integrated sensor like gyroscope to fill the
+unknown values between two GPS sample updates~\cite{Toledo_lane}.
+
+However, the works did not consider the uncertainty in-between consecutive GPS-based updates and sensor-based
+location detections.
+
+Some of the works~\cite{jie_lane,Toledo_lane}, use map matching algorithms to determine 
+which lane the vehicle belongs to and, subsequently, try to revise the measurement error using post-processing. 
+However, the bead (or, space-time prism) model has not been exploited.
+

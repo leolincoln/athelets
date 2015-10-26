@@ -1,0 +1,2 @@
+from analytics_engine import athelet_pair_visualize2
+athelet_pair_visualize2()

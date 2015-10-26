@@ -1,0 +1,88 @@
+\documentclass[10pt]{svjour3}
+
+\smartqed
+\usepackage{graphicx}
+%\usepackage[utf8]{inputenc}
+%\usepackage[enlgish]{babel}
+\let\proof\relax
+\let\endproof\relax
+\usepackage{amsthm}
+%%\theoremstyle{definition}
+%%\newtheorem{definition}{Definition}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{csquotes}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{lipsum}
+\setlength{\textwidth}{\dimexpr\pdfpagewidth-2in}% Equal left/right margins
+\usepackage{widetext}
+\usepackage{flushend}
+\usepackage{cuted}
+\usepackage{xr}
+%%\newtheorem{theorem}{Theorem}
+%%\newtheorem{lemma}{Lemma}
+%%\newtheorem{corollary}{Corollary}
+%%\newtheorem{property}{Property}
+
+\sloppy
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+%%\toappear{
+%%copyright...
+%%}
+
+\begin{document}
+
+
+
+\title{TITLE}
+
+
+\author{Diego Klabjan\and
+        Liu Liu
+}
+\institute{Diego Klabjan \at
+              Northwestern University \\
+              2145 Sheridan Road, Evanston, IL, 60201\\
+              \email{d-klabjan@northwestern.edu}           %  \\
+%             \emph{Present address:} of F. Author  %  if needed
+           \and
+              Liu Liu\thanks{Research Supported by the NSF III 1213038 grant} \at
+              Northwestern University \\
+              2145 Sheridan Road, Evanston, IL, 60201\\
+              \email{leoliu@u.northwestern.edu}
+}
+\date{Received: date / Accepted: date}
+\maketitle
+\begin{abstract}
+abstract holder. 
+\end{abstract}
+
+%%\category{H.2.8}{Database Applications}{Spatial databases and GIS}
+
+%%\terms{Theory}
+
+\keywords{keyword1,keyword2, keyword3}
+
+\section{Introduction}
+\label{intro}
+\input{Intro-V2.tex}
+
+
+\section{Pictures}
+\label{Pictures}
+\input{Pictures.tex}
+
+
+%\bibliographystyle{abbrv}
+%\bibliographystyle{spbasic}
+\bibliographystyle{spmpsci}
+\bibliography{comp11mc-GT-Comprehensive-2014}
+
+\end{document}

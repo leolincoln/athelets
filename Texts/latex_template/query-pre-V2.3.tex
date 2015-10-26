@@ -1,0 +1,416 @@
+\begin{comment}
+We now proceed with elaborating some basic calculations regarding the boundary of the possible locations of a given object at a specific time 
+instant under the FB model, as well as the time-interval during which an object can be at a particular location. Subsequently, we also discuss
+the methodology for detecting whether the possible locations of a moving object are part of a given (spatial) range.
+
+
+%%There are several fundamental questions we need to solve before processing different types of queries.
+%%%What is the location whereabouts at given time instance in FB model and how to calculate it? How do we define the a moving object belongs to 
+the %%%query range? In this section we will have multiple theatrical preparations for FB query.
+
+
+
+\subsection{Fused Bead -- Shape at Time Instant} \label{whereabouts}
+
+Recall that the FB model is based on the original bead obtained via
+GPS-based locations $L_1$ and $L_2$ (foci of a 2D ellipse $El_1$) and a road-side sensor providing possible
+locations along a line-segment perpendicular to a given road at a time instant $t_{s}$ (cf. Figure~\ref{fusing1-1}).
+
+%%%The composition of fused bead based on constraint (1) is shown in figure~\ref{fusing1-1}. The original
+%%%GPS-based location $L_1$ and $L_2$ yield a 2D projection which is a ellipse having them
+%%%as foci, noted as $El_1$. The road-side sensor provide
+%%%location information at $t_{s}$ along the
+%%%line that is perpendicular to the road with x-axis $X_{s1}$. $S_1$ intersect with $El_1$
+%%%with uncountably many points. Each point, such as $L_{11}$, paired with original foci of $El_1$ could
+%%%be regarded as a new generator of two more space-time prism that one start at $L_1$
+%%%and one terminate at $L_2$. The Fused bead is the union of uncountably many small bead
+%%%with one anchor point at foci of original ellipse and one moving point along $S_1$.
+
+%%%However, as we try to answer the query for the
+When it comes to location whereabouts at certain time instant $t_{s1}$, the regular bead model has a boundary defined
+%%%there is another angle to tackle the problem, namely,
+%%%instead of considering the union of uncountably many bead, the projection of fused bead is
+%%%the union of location whereabouts at each time instance in $[t_i, t_{i+1}]$. Recall that,
+%%%at any given time instance $t_{s1}$, the location whereabouts of GPS-based bead is
+by a lens $L_e(t_{s1})$ which obtained as the intersection of the circles with radii
+$v_{max}(t_{s1}-t_{1})$
+and $v_{max}(t_{2}-t_{s1})$, centered at $L_1$ and $L_2$ respectively (light blue shaded area in Figure~\ref{fusing:cross}). If it happens that
+at that same time instant the object has been detected by a roadside sensor -- then the object must be somewhere along the ray emanating from 
+that sensors location and perpendicular to the road segment. However, because of the uncertainty boundary from the GPS-based location data, only 
+the points along that ray which are inside the lens $L_e$ are valid possible-locations -- illustrated by the segment $P_1P_2$ in 
+Figure~\ref{fusing:cross}.
+%%%its location
+%%%The ray emanating from the road-side sensor intersect lens $L_e$ at $P_1$ and $P_2$ in Figure~\ref{fusing:cross}, and the line segment $P_1 
+%%%P_2 %%%is the valid
+%%%location whereabouts at $t_{s1}$.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/crosssection.png}
+    \caption{Cross Section of Fused Bead}
+    \label{fusing:cross}
+\end{figure}
+
+Let $\varepsilon \in [0,1]$ denote a real variable. Any point $P(t_{s1},\varepsilon) \in \overline{P_1P_2}$ which is a possible location of the 
+object at $t_{s1}$ has coordinates $x_{P(\varepsilon} = \varepsilon x_{P1} + (1 - \varepsilon) x_{P2}$ and $y_{P(\varepsilon} = \varepsilon 
+y_{P1} + (1 - \varepsilon) y_{P2}$
+
+With this in mind, given a time instant $t_i \in$  $[t_1, t_{s1}]$, the possible locations of the moving object at $t_i$ are bounded by the 
+uncountable union of  intersections between:
+
+\begin{enumerate}
+
+\item The disk centered at $L_1$ and with radius $v_{max}(t_{i}-t_{1})$.
+
+\item An infinite collection of disks, each centered at a point $P(t_{s1},\varepsilon)$ along $P_1P_2$ and each with radius 
+    $v_{max}(t_{s}-t_{i})$
+
+\end{enumerate}
+
+%%%two collections of uncountably many pairs of arcs. Each pairs of arcs represents the boundaries of the intersections of the corresponding 
+pairs o%f disks---one collection of arcs
+%%centered at one foci of the GPS-based bead (e.g., $L_1$ in figure~\ref{fusing:cross})
+%%and another one centered along line segment $P_1 P_2$. As the result, one of the boundaries is
+%%a circular arc with radii $v_{max}(t_i-t_1)$, centered at the focus of the GPS-based bead.
+
+In Figure~\ref{fusing:cross}, the circles $C_1, C_2$ and $C_3$ are examples of the boundaries of the objects whereabouts at different 
+time-values ($t_i$) due to the GPS-sample at location $L_1$. For a fixed value of $t_i$ Figure~\ref{fusing:cross} also shows the boundary 
+defined by the "envelope" of the union of
+the uncountably many disks centered along $P_1 P_2$ -- essentially, the sum of the line segment $P_1 P_2$ and a disk with radius 
+$v_{max}(t_s-t_i)$.
+%%% and centered on the intersection-chord,as shown
+%%%in figure~\ref{fusing:cross}.
+%%%We use $C_{ap}(t_i)$ to denote this Capsule-like shape at a given time instant $t_i$.
+%%%This union of uncountably many disks results in a capsule shape area, being remarked as $C_{ap}$, made of two half circles and a rectangle.
+
+Depending on the time value and $\varepsilon$, there are five basic kinds of time-intervals during which the shapes the unions determining the 
+object's whereabouts have distinct properties. We use the phrase {\it significant times} to denote the boundaries of those time-intervals. 
+%%between the disks composing $C_{ap}(t_i)$ and the %%disk centered at $L_1$:
+
+\begin{enumerate}
+
+\item $t \in [t_1, t_i^{l1})$ ({\it from disks until the first lens}): During this interval, the possible locations are inside a disk centered 
+    at $L_1$ -- this is the case when $t_i$ is very close to $t_1$, meaning: regardless of the value of $\varepsilon$, each disk with radius 
+    $v_{max}(t_{s}-t_{i})$ centered at any point along $P_1, P_2$, fully covers the disk centered at $L_1$ with radius $v_{max}(t_{i}-t_{1})$. 
+    Let $P_c$ denote the point along $P_1 P_2$ which is geometrically closest to $L_1$. Clearly, this point will be the one with the earliest 
+    change of this kind of containment with the disk -- at some time instant $t_i^{l1}$, the intersection\footnote{For clarity, we present the 
+    details of calculating $t_{i}^{l1}$ and other significant times in the Appendix.} will switch from a full-disk centered at $L_1$ into a 
+    lens defined by the intersection of the two disks: one centered at $L_1$ and one centered at $P_c$.
+
+\item $t \in [t_i^{l1}, t_i^{l_A})$ ({\it from a single lens, until "lenses\_All"}): During this time interval, depending on the values of 
+    $\varepsilon$, some of the disks centered along $P_1 P_2$ (each with radius $v_{max}(t_{s1}-t_{i})$) are still fully covering the disk 
+    centered at $L_1$ with radius $v_{max}(t_{i}-t_{1})$. These are the ones whose centers are closer to $P_1$ (i.e., $P(t_{s1},\varepsilon)$ 
+    with $\varepsilon$ closer to $0$).
+
+\item $t \in [t_i^{l_A}, t_i^{d1})$ ({ \it from lenses\_All, until the first (full) disk appears}): This is the time-period during which each 
+    possible foci along $P_1 P_2$ is a center of a disk with which yields a lens-shaped intersection with the disc centered at $L_1$. At the 
+    expiration of this time interval, the disk centered at $P_c$ and with radius $v_{max}(t_{s}-t_{i})$ is about to be fully covered by the 
+    disk centered at $L_1$ and with radius: $v_{max}(t_{i}-t_{1})$
+
+\item $t \in [t_i^{d1}, t_i^{d_A})$ ({ \it from a single disk appearance, until disks\_All}): similarly to the 2nd case above, during this 
+    time interval some of the disks centered along $P_1 P_2$ have a lens-shaped intersection with the disk centered at $L_1$, while some are 
+    fully contained inside of it.
+
+\item $t \in [t_i^{d_A}, t_{s1})$ ({ \it disks\_All}): The last distinct time-interval for the part of the FB between the first GPS-based foci 
+    and the roadside sensor is similar to case "1." above, in the sense that every disk with radius $v_{max}(t_{s1}-t_{i})$, regardless of 
+    where its center is located along $P_1 P_2$, is fully contained inside the disk centered at $L_1$ and with radius  
+    $v_{max}(t_{i}-t_{1})$.
+
+
+\end{enumerate}
+
+
+We note that for time-values $t \in [t_{s1}, t_2]$, the cases are analogous (and in reverse order) from the ones specified above, in the sense 
+that there are four significant time instants defining five distinct intervals.
+
+%%We note that, while each of the intersection points may be calculated by detecting the %%%intersections of two circles, or a circle and a line 
+%%segment, calculating the value of %%the intersection of the possible whereabouts with another region (e.g., for query %%processing) may require 
+%%numerical calculations, which we address next.
+
+%%The capsule $C_{ap}$ could be described by two circle functions and two line segment functions when we analyze the intersection scenario. 
+%%However, formalize this intersection is unrealistic considering its variation. As the result, in our implementation, a special numerical 
+%%method %%is pursued to build the intersection area at given time instance. %we build
+%the fused bead model in space-time coordinate, and the cross section can be obtained by
+%intersecting fused bead with a horizontal plane as shown in figure~\ref{fusing:3d}.
+
+
+%%%\subsection{NEED NEW TITLE HERE...}
+
+
+
+%FB accompanies uncertainty, and in nature we are unable to conclude an accurate location point at given time
+%instance, but a possible whereabouts region. How to define the case that the query object move into the query
+%range become critical. Even though we have the location whereabouts as discussed in section 4.1 and an overlap between location whereabouts and 
+%query range exist, we are still unable to label the predicate whether
+%the object is inside or not. Therefore, in this section, we pursue a probabilistic method and use probability
+%to describe the likelihood the moving object belongs to query range at certain time instance.
+
+%%%We proceed with introducing a few properties of fused bead that will assisting the calculation.
+%%%Recall that for a given fused bead $FB ( (x_i,y_i,t_i), (x_{i+1},y_{i+1},t_{i+1}), %%%v_{max},t_{s},m,b)$, the system of equations used to 
+%%determine the (boundary of the) possible whereabouts is:
+%%%he ray emanating from the road-side sensor intersects lens $L_e$ at $P_1$ and $P_2$. The simultaneous equations contain lens and line are:
+
+%%\begin{align}
+%%\begin{cases}
+%%(x - x_{1})^{2} + (y - y_{1})^{2} = (t - t_{1})^{2}v^{2}_{max},\\
+%%(x - x_{2})^{2} + (y - y_{2})^{2} = (t_{2} - t)^{2}v^{2}_{max},\\
+%%y=ax+b.
+%%\label{lens}
+%%\end{cases}
+%%\end{align}
+
+%%\begin{figure}
+%%    \centering
+%%    \includegraphics[width=2.8in]{figure/range.png}
+%%    \caption{Intersection of Uncertain Region and Query Range}
+%%    \label{fusing:range}
+%%\end{figure}
+
+%%%We can obtain the points $P_1$ and $P_2$ by simply finding the intersections of the $y %%= ax + b$ with each of the circles, call them 
+%%$I_{l1}, I_{l2}, I_{u1}$ and $I_{u2}$, %%%and selecting the two of them (e.g., $I_{u1}$ and $I_{l2}$).
+%%%corresponding to line $S_1$ intersects two circles. The line segment
+%%%$P_1 P_2$ is the intersection of two line segments $I_{l1} I_{l2}$ and $I_{u1} %%I_{u2}$.
+%%%As a consequence,
+%%%we could conclude that $P_1(x_{p1}, y_{p1})$ equals $I_{u1}$ and $P_2(x_{p2}, y_{p2})$ equals $I_{l2}$. The length of $P_1 P_2$ is denoted as 
+%%$L$.
+%%One important observation about the fused bead model is that, there are two location-fixed time at $t_1$ and $t_2$ and a location-semi-fixed 
+%%time %%at $t_s$.
+%%Although there are two portions of the FB (from $t_1$ to $t_{s1}$, and from $t_{s1}$ to %%%$t_2$) the analysis is, in some sense, symmetric -- 
+%5so, in the sequel we focus only on %%deriving the specifics for the interval $[ t_1, t_{s1}]$.
+%%%The location whereabouts
+%%%start from $t_1$, converge to a line segment at $t_s$, and finally stop at $t_2$. When %%%processing a single fused bead, we separate it into 
+%%two %%%half-beads. Although these %%%two
+%%%half-beads will not always be symmetric (only in the case the $S_1$ is the minor axis %%of
+%%%ellipse), they are composed in the identical manner, and the query process is %%similar.
+
+%%After finding the line segment $P_1 P_2$, let $d_{i1} = %%\sqrt{(x_{p1}-x_{1})^2+(y_{p1}-y_{1})^2}$ be the distance between the start location 
+%%at $t_1$ and end location at $t_s$.
+%%Besides, let $t_{svl_{1}} = (t_1+t_s)/2-d_{i1}/2v_{max}$ and $t_{svl_{2}} = %%(t_1+t_s)/2+d_{i1}/2v_{max}$. The uncertain region $UR_t$ for a 
+%%given time instance $t$ %%between
+%%$[t_1, t_s]$ could be divided into three phases:
+
+%%(1) Single disk. For every $t\in[t_1, t_{svl_{1}}]$, the uncertain region at t is a %%disk
+%%with radii $r(t)=v_{max}(t-t_1)$, centered at $(x_1, y_1)$.
+
+%%(2) Intersection between circle and capsule. For every $t\in[t_{svl_{1}}, %%t_{svl_{2}}]$,
+%%the uncertain region is the intersection between circle and capsule. The circle is %%centered
+%%at $(x_1, y_1)$ with radii $r(t)=v_{max}(t-t_1)$. The capsule, as we discussed in the %%previous
+%%section, is the union of uncountably many circles centered along line segment $P_1 P_2$ %%with
+%%radii $r(t)=v_{max}(t_s-t)$.
+
+%%(3) Capsule. The uncertain region for every $t\in[t_{svl_{2}}, t_s]$ is a capsule %%formed
+%%by union of uncountably many circles with radii $r(t)=v_{max}(t_s-t)$, centered along %%$P_1 P_2$.
+
+%%Another half-bead corresponding to the time interval $[t_s, t_2]$ can be divided into %%similar
+%%three parts as well.
+
+%%Assuming the moving object has the same chance of being located in every points in the %%uncertain area. In another word, the probability 
+%%distribution on uncertain region %%follows
+%%the uniform distribution. The probability density function $f(x,y,t)$ is specified as %%following:
+
+Let $D_1(t)$ denote the disk centered at $L_1$ and with radius $v_{max}(t-t_1)$. Also,
+let $D_P(t,\varepsilon)$ denote the disk centered at the point $P(t_{s1},\varepsilon)$ with radius $v_{max}(t_{s1}-t)$.
+Assuming a uniform distribution in each time-interval between two consecutive significant times\footnote{Throughout this work, we assume 
+independence between location-values in successive location samples (cf.~\cite{ICDE-Tutorial14,EmrichKMRZ12}.}, we obtain that the corresponding 
+{\it pdf}s (probability density functions) are:
+
+\begin{enumerate}
+
+\item $t \in [t_1, t_i^{l1})$:
+
+
+$$f(x,y,t)=\begin{cases} \frac{1}{\pi(v_{max}(t-t_1))^2} & \mbox{if} (x,y)\in D_1 (t)\\0& \mbox{otherwise}\end{cases}$$
+
+\item $t \in [t_i^{l1}, t_i^{l_A})$
+
+$$f(x,y,t) = \frac{1}{\pi(v_{max}(t-t_1))^2 + A(\cup_{\varepsilon > \delta_1(t)}(D_1(t) \cap D_P(t,\varepsilon)))}$$
+
+where $\delta_1(t)$ is the smallest value of $\varepsilon$ at a given $t$ for which $D_P(t,\varepsilon) \not\subseteq D_1(t)$. A stands for operations to calculate areas.
+
+\item $t \in [t_i^{l_A}, t_i^{d1})$
+
+$$f(x,y,t) = \frac{1}{A(\cup_{\varepsilon }(D_1(t) \cap D_P(t,\varepsilon)))}$$
+
+
+\item $t \in [t_i^{d1}, t_i^{d_A})$
+
+$$f(x,y,t) = \frac{1}{\pi(v_{max}(t_{s1}-t))^2 + A(\cup_{\varepsilon > \delta_2(t)}(D_1(t) \cap D_P(t,\varepsilon)))}$$
+
+where $\delta_2(t)$ is the smallest value of $\varepsilon$ at the given $t$ for which $D_1(t) \not\subseteq D_P(t,\varepsilon)$.
+
+\item $t \in [t_i^{d_A}, t_{s1})$
+
+$$f(x,y,t)=\begin{cases} \frac{1}{\pi(v_{max}(t_{s1}-t))^2 + \overline{P_{1}P_{2}} \cdot (v_{max}(t_{s1}-t)) } & \mbox{if}(\forall \varepsilon) D_P(t,\varepsilon) \subseteq D_1(t) \\ 0& 
+\mbox{otherwise}\end{cases}$$
+
+\end{enumerate}
+
+When calculating the probability that a given moving object whose motion is modelled as an FB is inside a given spatial range at a given time 
+instant, we need the area of the intersection and, generically speaking:
+
+%%We get a similar formula for $t\in[t_{svl_{2}}, t_s]$:
+%%$$f(x,y,t)=\begin{cases} \frac{1}{\pi(v_{max}(t_s-t))^2+v_{max}L(t_s-t)} & \mbox{if} (x,y)\in D_2 (t)\\0 & \mbox{otherwise}\end{cases}$$
+
+%%(2) For $t\in[t_{svl_{1}}, t_{svl_{2}}]$, we observe that the probability density function
+%%$f(x,y,t)$ can be regarded as joint distribution of two random variables $X$ and $Y$, where
+%%$X$ and $Y$ both have uniform distribution:
+%%$$f_X(x,y,t)=\begin{cases} \frac{1}{\pi(v_{max}(t-t_1))^2} & \mbox{if} (x,y)\in D_1 (t)\\0& \mbox{otherwise}\end{cases}$$
+
+%%$$f_Y(x,y,t)=\begin{cases} \frac{1}{\pi(v_{max}(t_s-t))^2+v_{max}L(t_s-t)} & \mbox{if} (x,y)\in D_2 (t)\\0 & \mbox{otherwise}\end{cases}$$
+%%The joint density function can be concluded as:
+%%\begin{widetext}
+%%\begin{equation}	
+%%f(x,y,t)=\begin{cases} w_1*\frac{1}{\pi(v_{max}(t-t_1))^2} & \mbox{if} (x,y)\in D_1 (t)\cap \overline{D_2}\\
+%%w_2*\frac{1}{\pi(v_{max}(t_s-t))^2+v_{max}L(t_s-t)} & \mbox{if} (x,y)\in D_2 (t)\cap \overline{D_1}\\
+%%w_1*\frac{1}{\pi(v_{max}(t-t_1))^2} + w_2*\frac{1}{\pi(v_{max}(t_s-t))^2+v_{max}L(t_s-t)} & \mbox{if} (x,y)\in D_1 (t)\cap D_2
+%%\end{cases}
+%%\end{equation}
+%%\end{widetext}
+%%Where $w_1 = \frac{\pi(v_{max}(t-t_1))^2}{\pi(v_{max}(t-t_1))^2+\pi(v_{max}(t_s-t))^2+v_{max}L(t_s-t)}$ and $w_2=1-w_1$.
+%%
+%%Therefore, we are able to calculate the probability value.
+
+%%For $t\in[t_1, t_{svl_{1}}]$
+\begin{comment}
+\begin{equation} \label{integral}
+P_{inside}(B, R, t) =\int_{UR_t \cap R}f(x,y,t)dxdy \\
+= \frac{Area\mbox{ }of\mbox{ }{\textit{UR_t}}\mbox{ }that\mbox{ }overlaps\mbox{ }R}{Area\mbox{ }of\mbox{ }\{textit{UR_t}}}
+\end{equation}
+\end{comment}
+
+%%For $t\in[t_{svl_{1}}, t_{svl_{2}}]$, the equation~\ref{integral} still holds to calculate the probability.
+
+However, given the complexity of the boundary of the objects whereabouts, the calculation of overlapping area necessitates relying on numeric 
+integration methods and getting approximate answers.
+
+
+\subsection{Numerical Method for Complex Area Calculation}
+
+
+
+
+Numerical methods provide a way to solve problems quickly and easily compared to analytic methods, especially in some cases when the analytic 
+methods are too complex or
+unachievable, in our case, estimating the overlap area using numerical methods is easy. We determine the type of numerical methods according to the 
+aim of tasks.
+If we try to obtain the intersection of two curves, the Newton-Raphson Method
+is the most widely used one. If the area under a curve is desired, Trapezoid Rule, Gaussian
+Quadrature Method or Monte Carlo Integration are useful tools.
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/old_area.png}
+    \caption{Area calculation in GPS-based bead}
+    \label{old_area}
+\end{figure}
+In GPS-based bead, the location whereabouts given time instance is a relatively simple
+geometry---either a circular disk or a lens formed by intersection of two circles as
+shown in figure~\ref{old_area}. Intersection points $P_1$ and $P_4$ between two curves
+$f_1(x, y)$ and $f_2(x, y)$ can be obtained by collecting two implicit functions and applying
+Newton-Raphson Method.
+
+\begin{align}
+\begin{cases}
+f_1(x, y)=0\\
+f_2(x, y)=0
+\label{equset1}
+\end{cases}
+\end{align}
+
+Similarly, Intersection points $P_2$ and $P_3$ between line segment $f_3(x, y)$
+of query region $R$ and two circles can be obtained from equation sets~\ref{equset2}~\ref{equset3}.
+
+\begin{align}
+\begin{cases}
+f_1(x, y)=0\\
+f_3(x, y)=0
+\label{equset2}
+\end{cases}
+\end{align}
+
+\begin{align}
+\begin{cases}
+f_2(x, y)=0\\
+f_3(x, y)=0
+\label{equset3}
+\end{cases}
+\end{align}
+
+The total area $UR$ can be regarded as two separate segments, each of them will be attained
+from circle sector minus a triangle. The overlap area between $UR$ and query region is the
+union of two circle segments and a triangle. In a word, the approach to calculate the cross section area of GPS-based bead is the combination of 
+numerical method, used to find intersection points, and basic geometry.
+
+However, after incorporating road-side sensor into our model and transform from GPS-based bead to
+fused bead, our traditional slicing and pasting method does not work. As we discussed in
+section 4.1,
+the intersection points between circle and capsule continuously changing following four cases: (a) There are
+two intersection points on the left line segment; (b) There is an intersection point on the left line segment and a point on half-circle; (c) 
+There is an intersection point on the right line segment and
+one or two points on half-circle; (d) There is an intersection point on the right line segment. In these scenarios, the components of cross 
+section area $UR$ is uncertain, and slicing it into basic geometry is not trivial.
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/grid.png}
+    \caption{Grid Based numerical approximation}
+    \label{grid}
+\end{figure}
+To overcome the uncertain geometrical composition challenge, we propose grid based numerical approximation. We have the following observation, 
+the capsule shape is
+the minkowski sum of uncountably many circles with center moving along the ray emanating from the roadside senor. Based on this observation, our 
+philosophy behind the grid approach is to
+allow cross section area grow as it supposed to be. In another word, instead of analyzing its geometry
+component at given time instance, we calculating the overall location whereabouts by
+aggregrating areas of each sub-bead. Figure~\ref{grid} explain this mechanism, the yellow circle is moving along
+the sensor line, starting from $p_1$ and ending at $p_2$. We set a moving step $\Delta d$
+as the minimum moving step so that the number of circles being involved in calculation is reduced from infinitely uncountable many to finite 
+countable. When the circle moves to $c_1$, it intersects with fixed circle $c$ centered at one foci of original ellipse. Their intersection 
+$c\cap c_1$ is captured by grid. In the next step, it moves to $c_2$ and we have their intersection $c\cap c_2$. The sum is obtained 
+by:
+
+$$(c\cap c_1)\cup (c\cap c_2)\cup ...\cup (c\cap c_n)$$
+\noindent
+One example of the above union operation is grid $g$ in figure~\ref{grid}. Grid $g$ is not covered by $c\cap c_1$ but $c\cap c_2$. As the 
+circle moving forward, more and more grids
+belong to cross section area are covered, and finally we achieve a numerical approximation
+of cross section. The area of grid shape can be calculated through simple counting or more advanced optimization technique to get a better 
+approximation. For example, the oblique boundary curve approximation is a boundary approximation technique with high accuracy.
+
+To calculate the area of intersection between $UR$ and query region $R$, we simply perform
+$$R\cap[(c\cap c_1)\cup (c\cap c_2)\cup ...\cup (c\cap c_n)]$$
+Since it is relatively easy to determine if a grid is in the region $R$ or not, we convert
+the difficult area calculation into a trivial question with set operation and counting.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/grid_ill.png}
+    \caption{Shape Density and Its Boundary}
+    \label{grid-shape}
+\end{figure}
+
+Now, we shall proceed to discuss how to calculate the area approximation. In figure~\ref{grid-shape}, circular shape $m$ is overlaid on grid 
+$M$. Let the
+area of grid cell be $A_m$ and let the area belongs to shape $m$ be $\Omega$. The density
+function can be calculated by:
+
+\begin{align}
+f(x,y)=
+\begin{cases}
+1 & \mbox{if } A_m \cap \Omega = A_m\\
+0 & \mbox{if } A_m \cap \Omega =\emptyset\\
+a_m/A_m & \mbox{if } A_m \in \Gamma
+\label{shape}
+\end{cases}
+\end{align}
+
+\noindent
+Although the approximation looks straight forward, the challenge exists for those elements reside
+on the boundary $\Gamma$. As we investigate those grid cells on the boundary of shape, some parts of the cell $a_m$ belong to shape, and the 
+density of the boundary cell can be
+described by fraction $a_m/A_m$. The shape area is the aggregation of all grid cell multiplied by their density function.
+
+There are two directions to improve the shape approximation accuracy. On one hand, we could
+increase the level of granularity to achieve a fine grained model; on the other hand,
+a better boundary estimation technique is desired since the approximation errors come from
+boundary cells.
+\end{comment}

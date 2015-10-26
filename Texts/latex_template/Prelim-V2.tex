@@ -1,0 +1,197 @@
+\begin{comment}
+Commented code
+
+We now present an overview of some of the techniques for obtaining location data, which we assume and rely upon in this work. Specifically,
+we discuss the main features of road-side sensors and GPS devices.
+Subsequently, we proceed with introducing the basic terminology and notation used
+in the rest of the paper.
+
+\subsection{Road-side Sensors}
+
+Starting in the 1920s, when the traffic signals were still
+manually controlled, several generations of sensor types have been
+developed and deployed along road segments in various states -- all for the purpose of more efficient 
+traffic management. The types of such sensors vary from the older
+pressure-sensitive ones introduced in 1931, to more modern laser-based sensors
+sensors~\cite{trafficmanual} and quite a few 
+%%%Contrary to the GPS-based data acquisition techniques where each
+%%%data source is isolated, the roadside sensors are usually
+%%%connected hierarchically to a server and send their sampled data to traffic
+%%%control center~\cite{roadside-server}. Compared with GPS system,
+%%%the roadside sensors have better measurement accuracy, higher
+%%%sampling frequency and shorter response time, which enables their
+%%%use in real time traffic information analysis and control.
+different types have been commercialized and
+used in day-to-day practical settings. For example, the AMR sensor~\cite{honeywell}
+developed by Honeywell is a type of magnetic sensor with low cost.
+The WiEye~\cite{easysense} is a passive infrared sensor that can be
+installed on top of motes to sense road condition. The variation of
+sensing technologies may affect the manner of how a motion is modeled, in order to
+capitalize on the capabilities of a particular type of sensor. In this paper, the
+data model for roadside sensor that we adopt is based on TruSense T-Series,
+manufactured by Laser Technology Inc.~\cite{lasertech} -- a kind of
+active infrared sensor with a very accuracy as well as a high sampling
+rate.
+
+\begin{table*}[ht]
+\centering \caption{Comparison among different types of sensor}
+\begin{tabular}{|c|c|c|c|c|c|c|} \hline
+Sensor technology&Count&Presence&Speed&Output
+Data&Classification&Multiple Lane detection\\ \hline
+\texttt{Inductive loop} & \cmark & \cmark & \cmark & \cmark &
+\cmark & \xmark \\ \hline \texttt{Magnetometer (two axis fluxgate)}
+& \cmark & \cmark & \cmark & \cmark & \xmark & \xmark \\ \hline
+\texttt{Magnetic induction coil} & \cmark & \cmark & \cmark &
+\cmark & \xmark & \xmark\\ \hline \texttt{Microwave radar}
+& \cmark & \cmark & \cmark & \cmark & \cmark & \cmark
+\\ \hline \texttt{Active infrared} & \cmark & \cmark & \cmark &
+\cmark & \cmark & \cmark \\ \hline \texttt{Passive infrared}
+& \cmark & \cmark & \cmark & \cmark & \xmark & \xmark \\ \hline
+\texttt{Ultrasonic} & \cmark & \cmark & \xmark & \cmark & \xmark &
+\xmark \\ \hline \texttt{Acoustic array} & \cmark & \cmark & \cmark
+& \cmark & \xmark &\cmark \\ \hline \texttt{Video image processor}
+& \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\ \hline
+\end{tabular}
+\label{tab1}
+\end{table*}
+
+
+Table~\ref{tab1} provides a summary of features of several different
+types of roadside sensors~\cite{trafficmanual}. As can be seen, 
+all of the popular and commercially available types can detect the presence and speed of vehicles, as well as provide a
+count value for the number of vehicles that have been detected in their
+sensing range. However, very few types provide more detailed sensing
+capabilities, such as classification and multiple lanes detection. We note that, unlike the 
+GPS-based data, the location-in-time information obtained from the roadside sensors has not been
+exploited extensively in MOD context.
+%%%data obtained with roadside sensors has not been  In this work,
+%%%we focus on detection of a presence of a moving object in the sensing range.
+
+
+
+\subsection{GPS-based Spatio-Temporal Uncertainty}
+
+When location is obtained via an on-board GPS device, plethora of works 
+from the MOD literature have addressed efficient processing of various categories of
+continuous spatio-temporal queries. Specifically, the problem of incorporating the uncertainty of the 
+location has been treated from a couple of basic stand-points.  
+
+One approach for modeling spatio-temporal
+uncertainty of moving objects is the, so called, sheared cylinder
+model. The main assumption is that at any time
+instant $t_i$, the object's location is inside a given disk with a
+fixed radius, centered at the expected location at $t_i$. For time
+values different from sampling ones, the expected location is obtained via
+linear interpolation~\cite{MyTODS04}. However, this model is geared towards
+past/historic trajectories.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/bead1.png}
+    \caption{Bead and Ellipse Model}
+    \label{Beads-fig}
+\end{figure}
+
+%%The time-geography~\cite{hagerstrand} ideas from the 1970s (and
+%%more recently probabilistic time geography~\cite{WinterY10}) have
+%%also permeated MOD research.
+The implications of the fact that the
+object's motion was bound by some $v_{max}$ \emph{in-between} two
+updates was analyzed in~\cite{pj99}. Based on the definition as a
+geometric set of 2D points, it was demonstrated that the
+possible whereabouts are bound by an ellipse, with foci at the respective
+point-locations of the consecutive samples.
+Subsequently,
+\cite{HornsE02}, presented a spatio-temporal version of the model,
+naming the volume in-between two update points a {\it
+bead}, and the entire uncertain trajectory, a {\it necklace}. This model 
+was actually introduced as a {\it space-time prism} in the geography literature~\cite{hagerstrand}. 
+However, the first work to present a formal analysis of the
+properties of the bead are~\cite{Kuijpers10}. An illustration is
+provided in Figure~\ref{Beads-fig}.
+Letting $d = \sqrt{(x_2 -
+x_1)^2 + (y_2 - y_1)^2}$ denote the distance between the starting
+location (at $t_1$) and ending location (at $t_2$), the equation
+of the projected ellipse (cf. ~\cite{pj99}) is:
+
+$$\displaylines{\frac{(2x - x_1 - x_2)^2}{v_{max}^2 (t_2 - t_1)^2}
++ \hfill{}\cr \frac{(2y - y_1 - y_2)^2}{v_{max}^2 (t_2 - t_1)^2 -
+(x_2 - x_1)^2 - (y_2 - y_1)^2} = 1 }$$
+
+The corresponding bead (or, space-time prism) is specified with the following
+constraints:
+
+\begin{equation} \label{Eq1}
+\begin{cases}
+t_i \leq t \leq t_{i+1} \\
+(x - x_i)^2 + (y - y_i)^2 \leq [(t - t_i)v_{max}^i]^2 \\
+(x - x_{i+1})^2 + (y - y_{i+1})^2 \leq [(t_{i+1} - t)v_{max}^i]^2
+\end{cases}
+\end{equation}
+
+\noindent where $v_{max}$ is the maximal speed that the object can
+take between $t_i$ and $t_{i+1}$. We note that, what is commonly
+called {\it expected} speed in the case of crisp trajectories, now
+becomes {\it minimal} expected speed in-between the updates/samples.
+As shown
+in Figure~\ref{Beads-fig}, at any time instant $t$ between two consecutive samples,
+the possible locations of the objects are bound by the lens -- i.e., intersection of two circles
+centered at the respective foci and with respective radii $v_{max}(t - t_1)$ and $v_{max}(t_2 - t)$.
+
+If the objects are constrained to move along a road network, then
+the space-time prisms are restricted in their size. Specifically,
+if the segments of the road network are assumed to be edges in a
+graph, then the prisms become restricted to planar
+figures~\cite{EmrichKMRZ12}.
+
+\subsection{Trajectories and Road Networks}
+
+Throughout this paper, we consider the following definition of a trajectory:
+
+\begin{definition} \label{Def-Trajectory}
+A {\it trajectory} $Tr_i$ of a moving object with a unique identifier ({\it oID}) \enquote{\it i},
+is a sequence of triplets $Tr=$ $[(L_1, t_1), (L_2, t_2),
+v_{max1}] \ldots$, $[(L_{n-1}, t_{n-1}), (L_n, t_n),
+v_{max\_(n-1)}]$ where each $L_i = (x_i, y_i)$ is a point in 2D space in a corresponding
+reference coordinate system, and $t_i$ denotes the time instant at which the object was
+at location $L_i$. When it comes to the time-values,
+$i < j$ implies $t_i < t_j$, and $v_{max\_i}$ denotes the
+maximum speed of the object between samples at $t_i$ and $t_{i+1}$
+\end{definition}
+
+\begin{figure}[hb]
+    \centering
+    \includegraphics[width=2.6in]{figure/Fig-RoadNet-Sensors.png}
+    \caption{Road Segments and Sensors}
+    \label{Sensor-fig}
+\end{figure}
+
+
+We define a road network as an {\it augmented graph} $G = (P, E_{RS})$ where $P
+= \{ p_1, p_2, \ldots, p_n \}$ denotes a set of points (commonly
+corresponding to intersections) and $E_{RS} = \{ r_{S1}, ..., r_{Sk} \}$ is a collection of triplets of the form
+$r_{Si} = (e_i, w_{ei},  v_{ei})$ where:
+
+\begin{itemize}
+
+\item $e_i = (p_{i1}, p_{i2}) $ ($ \in P$ X $P$) is a "regular edge" (i.e., a link between two connected vertices)
+
+\item $w_{ei}$ denotes the width of the road segment associated with the edge $e_i$.
+
+\item $v_{ei}$ denotes the maximum speed associated with $r_{Si}$.
+
+\end{itemize}
+
+We assume that the maximum speed
+in-between two consecutive location samples along a particular road segment corresponds to the
+speed-limit of that segment. Geometrically speaking, the collection of all the $r_{Si}$'s is
+the boundary of the Minkowski sum of each "regular edge" $e_i$ and a disk with diameter $w_{ei}$.
+
+We also assume the existence of a collection of sensors $S = \{
+s_1, s_2, ..., s_m \}$, where each sensor $s_j$ is located at a
+point along the outer boundary of some road segment $r_{Si}$. Each
+$s_j$ detects when (i.e., the time instant at which) a moving object crosses the line segment going
+through its location and perpendicular to $e_{i}$. The concepts are
+illustrated in Figure~\ref{Sensor-fig}.
+\end{comment}

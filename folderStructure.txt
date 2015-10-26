@@ -1,0 +1,7 @@
+dendrograms -- the dendrograms for each athelets based on standardized fft windows
+distanceheatmaps -- the heatmaps of distance matrix for each athelet's fft windows
+fftheatmaps -- the fft heatmaps for each athelets of each channel
+stdWindowScreePlots -- the standardized fft windows scree plot for each channel for each athelets. meanining the standardizatino is cross-window.
+stdChannelScreePlots -- the standardized fft channel scree plot for each channel for each athelets, meaning the standardization is cross-channel. 
+ssClusterScreePlots -- the screePlots for standardized fft windows using pseudo-F = (SS within/(k-1))/(SS between/(n-k))
+

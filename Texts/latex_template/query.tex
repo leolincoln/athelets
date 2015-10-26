@@ -1,0 +1,306 @@
+Without losing the generality, our discussion focus on a single fused bead.
+Notice that the query time interval $[t_{bq},t_{eq}]$ may span over a sequence of beads.
+Therefore, one need to check the satisfaction of a given predicate for each bead. This section includes four parts: (1) Basic {\it where\_at} and {\it when\_at} location-in-time (whereabouts) queries (2)
+Range queries given a query prism;(3) Lane--crossing query; (4) Pruning techniques that are able to increase
+query efficiency and accuracy.
+\subsection{Basic Queries}
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/new_bead.png}
+    \caption{Whereabouts at Time Instant}
+    \label{fusing:bead}
+\end{figure}
+The possible whereabouts of the object at a given time instant -- i.e., {\it where\_at(oID, t)} query -- for bead obtained by GPS-based samples, is determined via intersecting that bead with a horizontal plane at $t$ (cf. Figure~\ref{Beads-fig}) -- i.e., intersection of two circles centered at $L_1$ and $L_2$ with the radii corresponding to $v_{max}(t - t_1)$ and $v_{max}(t_2 - t)$. 
+
+%%%When fusing the GPS-based location data with the one from the road-side sensors, at each time-instant $t_1 < t \leq t_{s1}$ we have\footnote{We note %%%that the case $t_{s1}$ < $t$ < $t_{2}$ is symmetrical.} the objects whereabouts are located inside (and along the boundary of) the intersection of the %%%horizontal plane at {\it Time = t} and an {\it uncountably infinite union of intersections of pairs of disks} each being bounded by:
+
+
+%%%\begin{align}
+%%%\begin{cases}
+%%%t_{i} \leqslant t \leqslant t_{i+1},\\
+%%%(x_1 - x_{si})^{2} + (y_1 - y_{si})^{2} \leqslant (t - t_2)^{2}v^{2}_{max},\\
+%%%(x_{si} - x_2)^{2} + (y_{si} - y_2)^{2} \leqslant (t_2 - t)^{2}v^{2}_{max},\\
+%%%y_{si} = mx_{si} + b, \text{at } t
+%%%\end{cases}
+%%%\end{align}
+
+Similar to the GPS-based bead, in order to determine the whereabouts at a given time instant $t$ for a fused bead, we need to 
+obtain the intersection of {\it FB} with the horizontal plane {\it Time = t}. 
+The corresponding illustration of the volume in 2D space + Time, along with the 2D projection, is shown in Figure~\ref{fusing:bead}. The boundary of the 2D projection is obtained as the ``envelope" of the union of two collections of uncountably many pairs of arcs
+as discussed in section 4.1.
+
+%%%Each pair of arcs represents the boundaries of the intersections of the corresponding pairs of disks -- one centered at the focus of the GPS-based bead (e.g., $L_1$) and the other centered at a point along the intersection chord (cf. $\overline{L_{11}L_{13}}$ in Figure~\ref{fusing1}) resulting from secant due to the roadside sensor and the arc from the lens of the GPS-based bead. Thus, one of the boundaries is always a circular arc originating at the focal point of the "original" GPS-based bead, centered at focus of the GPS-based bead (say, $L_1$) and with radius $v_{max} (t - t_1)$. The the boundary is actually the boundary of the union of uncountably many disks with radii $v_{max} (t_{s1} - t)$, with centers along the intersection-chord. 
+
+The complementary query, \textit{when\_at(oID, L)} returns the times during which it is possible for the object ${\it oID}$ to be at the location $L(x_L, y_L)$, i.e., a time-interval $[t_L^1, t_L^2]$. The time-interval can be defined as the two intersections between the boundary of the fused bead $FB$ and the vertical line (i.e., ray) emanating from $L$. To calculate the values, we have the following observations:
+
+\begin{enumerate}
+
+\item $t_L^2$ is the latest time that a circle located at the GPS-based focus from the sample at $t_1$ will "reach" $L$ -- hence, it can be obtained as a solution to the equation:
+
+$\overline{L_1L} = v_{max} (t_L^2 - t_1)$
+
+\item $t_L^1$, on the other hand, is the earliest time that any circle with the center on the intersection chord($P_{1}P_{2}$ in figure~\ref{fusing:cross}) and radius $v_{max} (t_s - t_L^1)$  would pass through $L$. 
+
+\end{enumerate}
+
+\begin{comment}
+%%%Assuming uniform {\it pdf}s of the possible objects locations within the uncertainty zone defined by the $FB$ model for a given time instant, we now discuss the lane-crossing and range query.  Without loss of generality, we will consider an input consisting of a a single fused bead $FB((x_{i}, y_{i}, t_i), (x_{i+1}, y_{i+1}, t_{i+1}), v_{max}, t_{s}, m, b)$ and a region \textit{R$_{q}$}. 
+
+\end{comment}
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.2\textwidth}
+                \includegraphics[width=1.3in]{figure/road1_old.png}
+                \caption{Bead Model}
+                \label{road1:old}
+    \end{subfigure}%
+    \begin{subfigure}[b]{0.2\textwidth}
+                \includegraphics[width=1.3in]{figure/road1_new.png}
+                \caption{Fused Bead Model}
+                \label{road1:new}
+    \end{subfigure}%
+    \caption{MATLAB Visualization}
+    \label{road1}
+\end{figure}
+
+\begin{comment}
+The lane-crossing query  is a minor variation of  {\bf Q1}$^u$  (cf. Section 1):
+
+\noindent {\bf Q}$_{lc}^u$: {\it Retrieve all the vehicles which have  $>$ $\Theta$ ($ 0 < \Theta \leq 1$) probability of crossing
+the lane in road segment RS1}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=2.6in]{figure/area.png}
+    \caption{Evaluating lane-crossing query at $t_{i}$}
+    \label{area}
+\end{figure}
+
+Let \textit{C$_{t}$} denote the planar region corresponding to the answer of the {\it where\_at(oID, t)} 
+and let $f_{L}$ and $f_{e}$ denote the two curves defining the boundary of \textit{C$_{t}$}. Also, let 
+$(x_a, y_a)$ and $(x_b, y_b)$ denote the intersection points between $f_{L}$ and $f_{e}$ (i.e., the cusps of 
+the boundary of \textit{C$_{t}$}). To calculate the probability that the object $oID$ is crossing the lane at 
+time instant $t$, one needs to calculate the area of \textit{C$_{t}$} (\textit{A(C$_{t}$)}) and the area of the 
+portion of \textit{C$_{t}$} on "the other side" of the lane. While in some special cases -- e.g., when the GPS-based
+location samples are along the line parallel to the lane-separator line (cf. Figure~\ref{area}) and both are axis-parallel -- 
+it may be possible to have closed-form formula, we note that, in general one would need to rely on numerical integration.
+
+
+
+%%%As illustrated in figure~\ref{area}, 
+%%%\textit{C$_{t}$} is bounded by two curves $f_{L}$ and $f_{e}$ -- the corresponding boundaries for the region which 
+%%%constitutes the answer to {\it where\_at(oID,t) query.
+%%%The area above the x-axis stands for the probability the vehicle 
+%%%cross the lane. We observe that these two functions are injective 
+%%%functions from Y to X. The intersection points between $f_{L}$ and $f_{e}$
+%%%are $y_{a}$ and $y_{b}$. Integral is used in our calculation. 
+%%%Because the intersection $y_{a}$
+%%%is on the different lane, the integral interval for cross lane area is $[y_{a},0]$.
+%%%The area of cross section $C_{t}$ can be calculated by:
+
+%%%$$C_{t}=\int_{y_{b}}^{y_{a}} (f_{e}(x,y)-f_{L}(x,y)) dy$$
+
+%%%The area that represent the probability cross the lane $Area_{t}$ can be calculated by:
+
+%%%$$Area_{t}=\int_{0}^{y_{a}} (f_{e}(x,y)-f_{L}(x,y)) dy$$
+
+%%%A numerical method is essential to implement the above integral since there is no
+%%closed-form expression for the envelop function $f_{e}$.
+%%We could exam whether the bead cross the lane for a single vehicle using algorithm~\ref{alg:cross}:
+
+%%\begin{algorithm}  
+%%  \caption{Vehicle Change Lane}
+ %% 	\label{alg:cross}
+ %% \begin{algorithmic}[1]
+%%	  \For{t in $[t_{i}, t_{i+1}]$}
+%%	  	\State  \begin{equation}
+%%	  			p = \frac{Area_{t}}{C_{t}}
+%%	  			\end{equation}
+%%	  	\If {$p$ > $\theta$}
+%%	  		\State \textbf{Return} true
+%%	  	\EndIf
+%%	  \EndFor
+%%	  \State \textbf{Return} false 
+%%  \end{algorithmic}
+%%\end{algorithm}
+
+%%%When it comes to the range query, the methodologies applied for the lane-crossing query would require a minor modification in order to cater
+%%to the boundary of the region of interest for a given query (e.g., polygon, circle, etc...). 
+
+\end{comment}
+
+\subsection{Range Query Processing}
+Different from {\it Where\_at} queries, for which we are interested in two intersections between boundaries of FB and a vertical line, the range queries ask for the overlapping region between FB and query prism, 
+as illustrated in figure~\ref{FB-range}. In this section, for a given range query with parameters: \textit{R}, in the spatial
+dimensions; and $[t_{bq}, t_{eq}]$, in the temporal dimension of interest, we denote the set $\{\forall(x, y, t)|(x, y\in R$ and $t \in [t_{bq}, t_{eq}])\}$ for $QP_R$ (query prism). In this work, we focus on query regions that are simple and bounded by convex polygons.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/FB_range_query.png}
+    \caption{Range query for a given prism}
+    \label{FB-range}
+\end{figure}
+
+Range queries can be classified into different categories~\cite{TrajcevskiMDM10} depending on the containment relationship between beads and query prism
+ -- namely, whether the moving object will always be inside \textit{R}, and if it is definitely inside.~\cite{TrajcevskiMDM10} also proposed qualitative approaches to answer existential questions by verifying
+intersecting conditions between ellipses and circles. Based on these previous works, we propose a quantitative
+range query using probabilistic methodology -- in another word, how much likely moving objects fall into the desired region. 
+
+Given a trajectory, or a sequence of FB $Tr=$ $[FB_1, FB_2, \ldots, FB_n]$, where each
+$FB_{i}=$ $((x_i, y_i, t_i), (x_{i+1}, y_{i+1}, t_{i+1}), v_{max}, t_{s}, m, b)$, we
+are interested in answering the following range query:\\
+\\
+\noindent {\bf Q2}$^u$: {\it Given a fused bead $FB(((x_i, y_i, t_i), (x_{i+1}, y_{i+1}, t_{i+1}),$
+$ v_{max}, t_{s}, m, b))$, does the moving object have
+$>$ $\Theta$ ($ 0 < \Theta \leq 1$) probability of entering $QP_R$}.
+
+\begin{itemize}
+\item \textbf{Sometime Inside} $(FB, R, t_{bq}, t_{eq}, \theta, \triangle t)$ 
+\end{itemize}
+
+Within the predicate, for a single FB with no refinement, $t_{bq}$ and $t_{eq}$ are the starting and ending query time. In the following section, we will
+propose a pruning method to further narrow down the necessary query time interval as $[t_{in}, t_{out}]$.
+Therefore, we define a new time interval $[t_{min}, t_{max}]=[t_{in}, t_{out}] \cap [t_{bq}, t_{eq}]$ and assume $[t_{min}, t_{max}] \neq \emptyset$ in the algorithm. $\theta$ is the probability threshold acts as a classification condition when moving
+objects enter the query region. Finally, $\triangle t$ is the minimum gap between two time instants we investigate 
+in the algorithm. 
+
+The overall probability of entering query region \textit{R} is necessary in order to make a classification. Following
+our discussions in section 4.1, the overall probability \textit{Prob} is a triple integral of
+\textit{pdfs} on 2D+time space.
+
+$$Prob=\int_{T}\int_{Y}\int_{X} f(x,y,t)$$
+
+The grid based numerical method provides an accurate estimation regarding areas of location whereabouts at a certain
+time instant. Because of the uniform distribution of $pdfs$, integral on 2D space is able to be converted as
+the ratio between overlapping area and intersection area. Therefore,
+
+$$Prob=\int_{T} \frac{\mbox{Overlapping Area}(t)}{\mbox{Intersection Area}(t)}=\frac{\int_{T}\mbox{Overlapping Area}(t)}{\int_{T}\mbox{Intersection Area}(t)}=\frac{\mbox{Volume of overlapping region}}{\mbox{Overall volume}}$$
+
+The above integral can be concluded as following:
+
+\noindent\textbullet The overall probability of entering query region equals to overlapping volume divided by total volume in 2D+time space.
+
+\begin{algorithm}
+  \caption{Sometime Inside $(FB, R, t_{bq}, t_{eq}, \theta, \triangle t)$}
+  \label{Range-alg}
+  \begin{algorithmic}[1]
+      \State Initialize query instant $t_q$;
+      \While{$t_q < t_{eq}$}
+      	\If {Spatial probability $P_{inside}(t_q) = 1$}
+      		\State return: FB enter the region $R$;
+      	\Else
+      		\State Increment total volume $V_t$ by Intersection Area($t_q$);
+      		\State Increment overlapping volume $V_o$ by overlapping Area($t_q$);
+      	\EndIf
+      \State Increment $t_q$ by $\triangle t$;
+      \EndWhile
+      \State Overall probability $Prob = \frac{V_o}{V_t}$;
+      \If {$Prob \geq \theta$}
+      	\State return: FB enter the region $R$;
+      \Else
+      	\State return: FB does not enter the region $R$;
+      \EndIf
+  \end{algorithmic}
+\end{algorithm}
+
+In algorithm~\ref{Range-alg}, FB is sliced into flat cylinders, whose volume can be estimated as bottom area multiplied
+by height. Therefore, 
+
+$$Prob=\frac{\sum \mbox{overlapping Area} \times h}{\sum \mbox{Intersection Area} \times h}$$
+
+Line 6 and 7 in algorithm~\ref{Range-alg} implement aggregations for overlapping and intersection areas.
+
+In additional, we check a special case when $P_{inside}(t_q)=\int_{Y}\int_{X} f(x,y,t)=1$. In this
+situation, the moving object completely cross the boundary and enter the query region.
+As a result, we stop the running loop and return true --- for the purpose of eliminating false negatives
+that potentially might happen when
+one GPS point barely cross the boundary. There are two advantages of algorithm~\ref{Range-alg}: (1) no additional
+false negatives are introduced; (2) it takes advantages of FB model, and the number of false positives are reduced.
+
+%need more here (discussion about false negative and checking techniques)
+
+\subsection{Lane-crossing Query Processing}
+Lane-crossing query is a very special application of range query, where the query prism is degenerated from
+a polygon into a half plane. As shown in figure~\ref{fusing1-1}, the query region \textit{R} is the half-plane
+above the dashed blue line.
+
+In the introduction section, we have stated lane-crossing query {\bf Q1}$^u$,
+which is important in applications related to efficient traffic management. We reiterate {\bf Q1}$^u$
+and convert it into a form that is applicable to single FB.\\
+\\
+\noindent {\bf Q1'}$^u$: {\it Given a fused bead $FB(((x_i, y_i, t_i), (x_{i+1}, y_{i+1}, t_{i+1}),$
+$ v_{max}, t_{s}, m, b))$, does the moving object have
+$>$ $\Theta$ ($ 0 < \Theta \leq 1$) probability of crossing the lane and entering half-plane $R$}.\\
+\\
+Algorithm~\ref{Range-alg} can be Applied to query {\bf Q1'}$^u$. The overall result to {\bf Q1}$^u$ is
+the aggregation of each individual return from {\bf Q1'}$^u$.
+
+\subsection{Pruning Techniques}
+There are usually three stages for spatial-temporal query processing~\cite{GutingS05}:\\
+
+\noindent(1) \textit{Filtering}, where index is used to eliminate those data items that are
+guaranteed not to satisfy the query~\cite{TaoXC07,TrajcevskiMDM10};\\
+\noindent(2) \textit{Pruning}, where some properties might be used to further filter out a portion
+of the data set without introducing any false negatives;\\
+\noindent(3) \textit{Refinement}, where certain algorithms are used to eliminate false positives that were not filtered out during the previous stage(s).\\
+
+In this work, we do not address the problem of indexing. In the sequel, we focus on the last two stages of query processing. Algorithm~\ref{Range-alg} for range query, as an example, belongs to the refinement stage. In order to
+boost the overall execution time, certain pruning techniques are essential.
+
+
+\noindent\textit{A. Definitely Outside -- Individual Fused Bead Bounds (IBb)}
+
+First proposed by~\cite{TrajcevskiMDM10}, this pruning strategy is originally designed for GPS-based bead.
+It approximates each GPS-based bead with its minimum bounding vertical cylinder. According to the Lemma~\ref{bead_bond}, FB is bounded by GPS-based bead, which inspires us to extend the application of IBb to FB as well.
+In effect, the ellipse -- which is the projection of a bead, formed by two GPS points from FB, becomes a circle centered in the center of the respective ellipse, as shown in figure~\ref{IFBb}. The radius of the approximation-disk $Ad_i$ is: $r(Ad_i) = 1/2(v_{max}^i)(t_{i+1} - t_{i})$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=2.8in]{figure/IFBb.png}
+    \caption{Cylinder-based pruning approximation}
+    \label{IFBb}
+\end{figure}
+
+\noindent\textit{B. Definitely Inside -- GPS points pre-screening}
+
+This pruning technique is specially designed for lane-crossing query, where the predicate determines if the FB is possible to cross the lane. We have the following observation, namely, if two GPS points are located on two sides
+of the central line, there must be at least one time, that the moving object crosses the road, in which case we are
+able to prune the FB and direct return true. This pre-screening, together with algorithm~\ref{Range-alg}, further
+guarantees the fact that FB does not produce false negative, since all scenarios when moving objects cross the lane according to linear interpolation will be classified as true.
+
+\noindent\textit{C. Sometime Inside -- fine grained dead-space removal}
+
+We are interested in finding
+the time instant when the uncertain trajectory enter/exit the query region $R$, to be
+more specific, in finding critical points. By doing so, we eliminate some redundant time before and after query processing.
+
+The general case for time $t \in [t_{i}, t_{i+1}]$
+being a critical point occurs when the intersection of the uncertain region at $t$ with a query rectangle is a single point. In the time interval $[t_{i}, t_s]$, the single-point-intersection between disk centered at the first GPS point and query region stands for the entering moment. Similarly, in the time interval $[t_s, t_{i+1}]$, the single-point-intersection represents exiting moment. Since the query region is represented as polygon in the $(X,Y)$ plane, each edge of the polygon is defined as a segment of 2D line $y = ax+b$. 
+
+The entry boundary of FB is:
+
+$$(x - x_{i})^{2} + (y - y_{i})^{2} = (t - t_{i})^{2}v^{2}_{max}$$
+
+Substituting for y for the equation of the line, we have:
+
+$$(x - x_{i})^{2} + (ax+b - y_{i})^{2} = (t - t_{i})^{2}v^{2}_{max}$$
+
+This yields an equation in x and t:
+
+$$A*x^2+x*(B+C*t)+D*t^2+E=0$$
+
+Where $A,B,C,D,E$ are constant. Solving for x, as a function of t, we have:
+
+$$x_{1,2}=\frac{-(B+C*t) \pm \sqrt{(B+C*t)^2-4*A*(D*t^2+E)}}{2*A}$$
+
+To be noted that, we need to check solutions for $x$ against boundaries of the respect
+edge of the query region. To find the time for critical point, we set the discriminant to
+be zero:
+
+$$\sqrt{(B+C*t)^2-4*A*(D*t^2+E)}=0$$
+
+The real root $t_{in}$ is the time instant when the uncertain trajectory start to enter the query prism.
+
+For time value $t \in [t_s, t_{i+1}]$, we can use the similar method to find the exiting time $t_{out}$. Our new
+query time interval in algorithm~\ref{Range-alg} is:
+$$[t_{min},t_{max}] = [t_{in},t_{out}] \cap [t_{i},t_{i+1}]$$

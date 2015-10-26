@@ -1,0 +1,13 @@
+*.dat
+*.wfft
+*.eeg
+*.amrk
+*.ahdr
+*.EEG
+*.crw
+*.TXT
+*.pdf
+#APPLE ds_store
+.DS_Store
+*.MOV
+*.pyc
