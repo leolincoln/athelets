@@ -992,6 +992,8 @@ def ssCluster(name='Victoria_Azarenka',data=None,path=None,whiten=False,suffix='
     elif type(data) == type([]) or type(data) == type(np.array([])):
         if type(data[0]) == type({}):
             std2 = np.array([dict_flatten(e) for e in data]).astype(float)
+        else:
+            std2 = np.array(data).astype(float)
     else:
         std2 = []
         print 'data type:',type(data)
