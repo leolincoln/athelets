@@ -9,6 +9,10 @@ import math
 import numpy as np
 from analytics_engine import ssCluster
 from scipy import signal,stats
+
+def mean(l):
+    return reduce(lambda x, y: x + y, l) / len(l)
+
 #read the csv and return a dictionary of
 #filename -=> channel -=> pearsonr
 #u can also specify which pearsonr to read. Defaults to 2.
@@ -427,65 +431,84 @@ def control_pro_channel_test(result,names):
             group1112.append(result[i][12])
 
     group0 = np.array(group0)
+    print 'mean_:',group0.mean(),mean(group0_control)
     rvs = stats.ttest_ind(group0, group0_control)
     print 'group0',rvs
     group1 = np.array(group1)
+    print 'mean_:',group1.mean(),mean(group1_control)
     rvs = stats.ttest_ind(group1, group1_control)
     print 'group1',rvs
     group2 = np.array(group2)
+    print 'mean_:',group2.mean(),mean(group2_control)
     rvs = stats.ttest_ind(group2, group2_control)
     print 'group2',rvs
     group3 = np.array(group3)
+    print 'mean_:',group3.mean(),mean(group3_control)
     rvs = stats.ttest_ind(group3, group3_control)
     print 'group3',rvs
     group4 = np.array(group4)
+    print 'mean_:',group4.mean(),mean(group4_control)
     rvs = stats.ttest_ind(group4, group4_control)
     print 'group4',rvs
     group5 = np.array(group5)
+    print 'mean_:',group5.mean(),mean(group5_control)
     rvs = stats.ttest_ind(group5, group5_control)
     print 'group5',rvs
     group6 = np.array(group6)
+    print 'mean_:',group6.mean(),mean(group6_control)
     rvs = stats.ttest_ind(group6, group6_control)
     print 'group6',rvs
     group7 = np.array(group7)
+    print 'mean_:',group7.mean(),mean(group7_control)
     rvs = stats.ttest_ind(group7, group7_control)
     print 'group7',rvs
     group8 = np.array(group8)
+    print 'mean_:',group8.mean(),mean(group8_control)
     rvs = stats.ttest_ind(group8, group8_control)
     print 'group8',rvs
     group9 = np.array(group9)
+    print 'mean_:',group9.mean(),mean(group9_control)
     rvs = stats.ttest_ind(group9, group9_control)
     print 'group9',rvs
     group10 = np.array(group10)
     rvs = stats.ttest_ind(group10, group10_control)
+    print 'mean_:',group10.mean(),mean(group10_control)
     print 'group10',rvs
     group11 = np.array(group11)
+    print 'mean_:',group11.mean(),mean(group11_control)
     rvs = stats.ttest_ind(group11, group11_control)
     print 'group11',rvs
     group12 = np.array(group12)
+    print 'mean_:',group12.mean(),mean(group12_control)
     rvs = stats.ttest_ind(group12, group12_control)
     print 'group12',rvs
     group13 = np.array(group13)
     rvs = stats.ttest_ind(group13, group13_control)
+    print 'mean_:',group13.mean(),mean(group13_control)
     print 'group13',rvs
     group14 = np.array(group14)
     rvs = stats.ttest_ind(group14, group14_control)
+    print 'mean_:',group14.mean(),mean(group14_control)
     print 'group14',rvs
     group15 = np.array(group15)
+    print 'mean_:',group15.mean(),mean(group15_control)
     rvs = stats.ttest_ind(group15, group15_control)
     print 'group15',rvs
     
     group567 = np.array(group567)
+    print 'mean_:',group567.mean(),mean(group567_control)
     #group567_all = np.array(group567_all)
     rvs = stats.ttest_ind(group567,group567_control)
     print 'group567',rvs
 
     group8910 = np.array(group8910)
     rvs = stats.ttest_ind(group8910,group8910_control)
+    print 'mean_:',group8910.mean(),mean(group8910_control)
     print 'group8910',rvs
 
     group1112 = np.array(group1112)
     rvs = stats.ttest_ind(group1112,group1112_control)
+    print 'mean_:',group1112.mean(),mean(group1112_control)
     print 'group1112',rvs
     '''
     with open('../test.csv','a') as f:
@@ -727,4 +750,5 @@ def do_clustering(p=2):
     print names
     get_cluster(result,names)
 if __name__=='__main__':
-    do_clustering()
+    #do_clustering()
+    do_tests()

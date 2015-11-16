@@ -1,6 +1,10 @@
+'''
+This file is used for linear regression, which after using weka has been proved to have nothing relevant. 
+Therefore not used. However the functions here can be used for others reading in csv files and return matrix, as explained by the functional documentations. 
+'''
+
 import numpy as np
 import scipy as sp
-
 def is_number(s):
 	'''
 	Args:
