@@ -26,6 +26,7 @@ def bar_plot(data,xlabel,ylabel,title,address):
     plt.xlabel(xlabel)
     plt.title(title)
     plt.savefig(address)
+
 def mean(l):
     return reduce(lambda x, y: x + y, l) / len(l)
 
@@ -761,7 +762,7 @@ def get_ind(result,names,name):
         print 'name not found'
         sys.exit(1)
     return result[idx]
-def get_individual(name,p=2,plot=True,address=None):
+def get_individual(name,p=2,plot=True,address=None,title=None):
     '''
     Uses the helper function get_ind
     Args:
@@ -778,7 +779,13 @@ def get_individual(name,p=2,plot=True,address=None):
     result,names = raw_transform(raw)
     data = get_ind(result,names,name)
     if plot:
-        bar_plot(data,address = address,xlabel = 'channel',ylabel='pearsonr',title='pearson\'s correlation for individual')
+        #check title
+        if title is None:
+            if len(name)>4:
+                title='pearson\'s correlation for Pro'
+            else:
+                title='pearson\'s correlation for control'
+        bar_plot(data,address = address,xlabel = 'channel',ylabel='pearsonr',title='title')
     return data
 def do_tests(p=2):
     raw = read_csv('result2.csv',p=p)
