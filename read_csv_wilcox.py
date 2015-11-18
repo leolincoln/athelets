@@ -1,7 +1,7 @@
 '''
 This file is used to read csv file and then come up with clustering result.
 The csv files should be in such format: name, pearsonr1, pearsonr2, ...., pearsonrn
-Pearsonr refers to the pearson correlation coefficient. 
+Pearsonr refers to the pearson correlation coefficient.
 This file can also be used to do T-Test on means for athletes or controls.
 Main function: Main()
 '''
@@ -9,23 +9,7 @@ import math
 import numpy as np
 from analytics_engine import ssCluster
 from scipy import signal,stats
-from matplotlib import pylab as plt
-def bar_plot(data,xlabel,ylabel,title,address):
-    '''
-    data: array of number
-    xlabel: label for x axis
-    ylabel: label for y axis
-    title: title for plot
-    address: address of plot to save to
-    '''
-    N = len(data)
-    ind = np.arange(N)    # the x locations for the groups
-    width = 0.35       # the width of the bars: can also be len(x) sequence
-    p = plt.bar(ind,data,width,color='r')
-    plt.ylabel(ylabel)
-    plt.xlabel(xlabel)
-    plt.title(title)
-    plt.savefig(address)
+
 def mean(l):
     return reduce(lambda x, y: x + y, l) / len(l)
 
@@ -115,7 +99,7 @@ def get_cluster(result=None,names=None):
     if result is None and names is None:
         raw = read_csv('result2.csv')
         result,names = raw_transform(raw)
-    
+
     #cluster_result = ssCluster(data = np.array(result))
     cluster_result = ssCluster(data = np.array(result),show=False)
     print cluster_result
@@ -167,9 +151,9 @@ def pro_control_all_ttest(result,names):
             group_pro.extend(result[i])
         else:
             group_control.extend(result[i])
-    rvs = stats.ttest_ind(group_pro, group_all)
+    rvs = stats.wilcoxon(group_pro, group_all)
     print 'pro vs all',rvs
-    rvs = stats.ttest_ind(group_control, group_all)
+    rvs = stats.wilcoxon(group_control, group_all)
     print 'control vs all',rvs
 def control_channel_test(result,names):
     result = np.array(result)
@@ -276,65 +260,65 @@ def control_channel_test(result,names):
         group1112.append(result[i][12])
 
     group0 = np.array(group0)
-    rvs = stats.ttest_ind(group0, group0_all)
+    rvs = stats.wilcoxon(group0, group0_all)
     print 'group0',rvs
     group1 = np.array(group1)
-    rvs = stats.ttest_ind(group1, group1_all)
+    rvs = stats.wilcoxon(group1, group1_all)
     print 'group1',rvs
     group2 = np.array(group2)
-    rvs = stats.ttest_ind(group2, group2_all)
+    rvs = stats.wilcoxon(group2, group2_all)
     print 'group2',rvs
     group3 = np.array(group3)
-    rvs = stats.ttest_ind(group3, group3_all)
+    rvs = stats.wilcoxon(group3, group3_all)
     print 'group3',rvs
     group4 = np.array(group4)
-    rvs = stats.ttest_ind(group4, group4_all)
+    rvs = stats.wilcoxon(group4, group4_all)
     print 'group4',rvs
     group5 = np.array(group5)
-    rvs = stats.ttest_ind(group5, group5_all)
+    rvs = stats.wilcoxon(group5, group5_all)
     print 'group5',rvs
     group6 = np.array(group6)
-    rvs = stats.ttest_ind(group6, group6_all)
+    rvs = stats.wilcoxon(group6, group6_all)
     print 'group6',rvs
     group7 = np.array(group7)
-    rvs = stats.ttest_ind(group7, group7_all)
+    rvs = stats.wilcoxon(group7, group7_all)
     print 'group7',rvs
     group8 = np.array(group8)
-    rvs = stats.ttest_ind(group8, group8_all)
+    rvs = stats.wilcoxon(group8, group8_all)
     print 'group8',rvs
     group9 = np.array(group9)
-    rvs = stats.ttest_ind(group9, group9_all)
+    rvs = stats.wilcoxon(group9, group9_all)
     print 'group9',rvs
     group10 = np.array(group10)
-    rvs = stats.ttest_ind(group10, group10_all)
+    rvs = stats.wilcoxon(group10, group10_all)
     print 'group10',rvs
     group11 = np.array(group11)
-    rvs = stats.ttest_ind(group11, group11_all)
+    rvs = stats.wilcoxon(group11, group11_all)
     print 'group11',rvs
     group12 = np.array(group12)
-    rvs = stats.ttest_ind(group12, group12_all)
+    rvs = stats.wilcoxon(group12, group12_all)
     print 'group12',rvs
     group13 = np.array(group13)
-    rvs = stats.ttest_ind(group13, group13_all)
+    rvs = stats.wilcoxon(group13, group13_all)
     print 'group13',rvs
     group14 = np.array(group14)
-    rvs = stats.ttest_ind(group14, group14_all)
+    rvs = stats.wilcoxon(group14, group14_all)
     print 'group14',rvs
     group15 = np.array(group15)
-    rvs = stats.ttest_ind(group15, group15_all)
+    rvs = stats.wilcoxon(group15, group15_all)
     print 'group15',rvs
 
     group567 = np.array(group567)
     #group567_all = np.array(group567_all)
-    rvs = stats.ttest_ind(group567,group567_all)
+    rvs = stats.wilcoxon(group567,group567_all)
     print 'group567',rvs
 
     group8910 = np.array(group8910)
-    rvs = stats.ttest_ind(group8910,group8910_all)
+    rvs = stats.wilcoxon(group8910,group8910_all)
     print 'group8910',rvs
 
     group1112 = np.array(group1112)
-    rvs = stats.ttest_ind(group1112,group1112_all)
+    rvs = stats.wilcoxon(group1112,group1112_all)
     print 'group1112',rvs
 
 
@@ -448,82 +432,82 @@ def control_pro_channel_test(result,names):
 
     group0 = np.array(group0)
     print 'mean_:',group0.mean(),mean(group0_control)
-    rvs = stats.ttest_ind(group0, group0_control)
+    rvs = stats.wilcoxon(group0, group0_control)
     print 'group0',rvs
     group1 = np.array(group1)
     print 'mean_:',group1.mean(),mean(group1_control)
-    rvs = stats.ttest_ind(group1, group1_control)
+    rvs = stats.wilcoxon(group1, group1_control)
     print 'group1',rvs
     group2 = np.array(group2)
     print 'mean_:',group2.mean(),mean(group2_control)
-    rvs = stats.ttest_ind(group2, group2_control)
+    rvs = stats.wilcoxon(group2, group2_control)
     print 'group2',rvs
     group3 = np.array(group3)
     print 'mean_:',group3.mean(),mean(group3_control)
-    rvs = stats.ttest_ind(group3, group3_control)
+    rvs = stats.wilcoxon(group3, group3_control)
     print 'group3',rvs
     group4 = np.array(group4)
     print 'mean_:',group4.mean(),mean(group4_control)
-    rvs = stats.ttest_ind(group4, group4_control)
+    rvs = stats.wilcoxon(group4, group4_control)
     print 'group4',rvs
     group5 = np.array(group5)
     print 'mean_:',group5.mean(),mean(group5_control)
-    rvs = stats.ttest_ind(group5, group5_control)
+    rvs = stats.wilcoxon(group5, group5_control)
     print 'group5',rvs
     group6 = np.array(group6)
     print 'mean_:',group6.mean(),mean(group6_control)
-    rvs = stats.ttest_ind(group6, group6_control)
+    rvs = stats.wilcoxon(group6, group6_control)
     print 'group6',rvs
     group7 = np.array(group7)
     print 'mean_:',group7.mean(),mean(group7_control)
-    rvs = stats.ttest_ind(group7, group7_control)
+    rvs = stats.wilcoxon(group7, group7_control)
     print 'group7',rvs
     group8 = np.array(group8)
     print 'mean_:',group8.mean(),mean(group8_control)
-    rvs = stats.ttest_ind(group8, group8_control)
+    rvs = stats.wilcoxon(group8, group8_control)
     print 'group8',rvs
     group9 = np.array(group9)
     print 'mean_:',group9.mean(),mean(group9_control)
-    rvs = stats.ttest_ind(group9, group9_control)
+    rvs = stats.wilcoxon(group9, group9_control)
     print 'group9',rvs
     group10 = np.array(group10)
-    rvs = stats.ttest_ind(group10, group10_control)
+    rvs = stats.wilcoxon(group10, group10_control)
     print 'mean_:',group10.mean(),mean(group10_control)
     print 'group10',rvs
     group11 = np.array(group11)
     print 'mean_:',group11.mean(),mean(group11_control)
-    rvs = stats.ttest_ind(group11, group11_control)
+    rvs = stats.wilcoxon(group11, group11_control)
     print 'group11',rvs
     group12 = np.array(group12)
     print 'mean_:',group12.mean(),mean(group12_control)
-    rvs = stats.ttest_ind(group12, group12_control)
+    rvs = stats.wilcoxon(group12, group12_control)
     print 'group12',rvs
     group13 = np.array(group13)
-    rvs = stats.ttest_ind(group13, group13_control)
+    rvs = stats.wilcoxon(group13, group13_control)
     print 'mean_:',group13.mean(),mean(group13_control)
     print 'group13',rvs
     group14 = np.array(group14)
-    rvs = stats.ttest_ind(group14, group14_control)
+    rvs = stats.wilcoxon(group14, group14_control)
     print 'mean_:',group14.mean(),mean(group14_control)
     print 'group14',rvs
     group15 = np.array(group15)
     print 'mean_:',group15.mean(),mean(group15_control)
-    rvs = stats.ttest_ind(group15, group15_control)
+    rvs = stats.wilcoxon(group15, group15_control)
     print 'group15',rvs
-    
+
     group567 = np.array(group567)
     print 'mean_:',group567.mean(),mean(group567_control)
     #group567_all = np.array(group567_all)
-    rvs = stats.ttest_ind(group567,group567_control)
+    rvs = stats.wilcoxon(group567,group567_control)
     print 'group567',rvs
 
     group8910 = np.array(group8910)
-    rvs = stats.ttest_ind(group8910,group8910_control)
+    rvs = stats.wilcoxon(group8910,group8910_control)
     print 'mean_:',group8910.mean(),mean(group8910_control)
     print 'group8910',rvs
 
     group1112 = np.array(group1112)
-    rvs = stats.ttest_ind(group1112,group1112_control)
+    rvs = stats.wilcoxon(group1112,group1112_control)
     print 'mean_:',group1112.mean(),mean(group1112_control)
     print 'group1112',rvs
     '''
@@ -638,65 +622,65 @@ def pro_channel_test(result,names):
         group1112.append(result[i][12])
 
     group0 = np.array(group0)
-    rvs = stats.ttest_ind(group0, group0_all)
+    rvs = stats.wilcoxon(group0, group0_all)
     print 'group0',rvs
     group1 = np.array(group1)
-    rvs = stats.ttest_ind(group1, group1_all)
+    rvs = stats.wilcoxon(group1, group1_all)
     print 'group1',rvs
     group2 = np.array(group2)
-    rvs = stats.ttest_ind(group2, group2_all)
+    rvs = stats.wilcoxon(group2, group2_all)
     print 'group2',rvs
     group3 = np.array(group3)
-    rvs = stats.ttest_ind(group3, group3_all)
+    rvs = stats.wilcoxon(group3, group3_all)
     print 'group3',rvs
     group4 = np.array(group4)
-    rvs = stats.ttest_ind(group4, group4_all)
+    rvs = stats.wilcoxon(group4, group4_all)
     print 'group4',rvs
     group5 = np.array(group5)
-    rvs = stats.ttest_ind(group5, group5_all)
+    rvs = stats.wilcoxon(group5, group5_all)
     print 'group5',rvs
     group6 = np.array(group6)
-    rvs = stats.ttest_ind(group6, group6_all)
+    rvs = stats.wilcoxon(group6, group6_all)
     print 'group6',rvs
     group7 = np.array(group7)
-    rvs = stats.ttest_ind(group7, group7_all)
+    rvs = stats.wilcoxon(group7, group7_all)
     print 'group7',rvs
     group8 = np.array(group8)
-    rvs = stats.ttest_ind(group8, group8_all)
+    rvs = stats.wilcoxon(group8, group8_all)
     print 'group8',rvs
     group9 = np.array(group9)
-    rvs = stats.ttest_ind(group9, group9_all)
+    rvs = stats.wilcoxon(group9, group9_all)
     print 'group9',rvs
     group10 = np.array(group10)
-    rvs = stats.ttest_ind(group10, group10_all)
+    rvs = stats.wilcoxon(group10, group10_all)
     print 'group10',rvs
     group11 = np.array(group11)
-    rvs = stats.ttest_ind(group11, group11_all)
+    rvs = stats.wilcoxon(group11, group11_all)
     print 'group11',rvs
     group12 = np.array(group12)
-    rvs = stats.ttest_ind(group12, group12_all)
+    rvs = stats.wilcoxon(group12, group12_all)
     print 'group12',rvs
     group13 = np.array(group13)
-    rvs = stats.ttest_ind(group13, group13_all)
+    rvs = stats.wilcoxon(group13, group13_all)
     print 'group13',rvs
     group14 = np.array(group14)
-    rvs = stats.ttest_ind(group14, group14_all)
+    rvs = stats.wilcoxon(group14, group14_all)
     print 'group14',rvs
     group15 = np.array(group15)
-    rvs = stats.ttest_ind(group15, group15_all)
+    rvs = stats.wilcoxon(group15, group15_all)
     print 'group15',rvs
 
     group567 = np.array(group567)
     #group567_all = np.array(group567_all)
-    rvs = stats.ttest_ind(group567,group567_all)
+    rvs = stats.wilcoxon(group567,group567_all)
     print 'group567',rvs
 
     group8910 = np.array(group8910)
-    rvs = stats.ttest_ind(group8910,group8910_all)
+    rvs = stats.wilcoxon(group8910,group8910_all)
     print 'group8910',rvs
 
     group1112 = np.array(group1112)
-    rvs = stats.ttest_ind(group1112,group1112_all)
+    rvs = stats.wilcoxon(group1112,group1112_all)
     print 'group1112',rvs
 
     with open('../test.csv','a') as f:
@@ -743,43 +727,9 @@ def t_test_provscontrol(result,names):
         else:
             #the control group
             group2.extend(result[i])
-    rvs = stats.ttest_ind(group1, group2)
+    rvs = stats.wilcoxon(group1, group2)
     print rvs
 
-def get_ind(result,names,name):
-    '''
-    Helper function used by get_individual
-    Args:
-        result: float array of array the result array from raw_transform
-        names: String array the names from raw_transform
-        name: String the name of individual that you want to find
-        p: int for which pearsonr was calculated. e.g. all easy vs all hard is at 28
-    '''
-    try:
-        idx = names.index(name)
-    except ValueError:
-        print 'name not found'
-        sys.exit(1)
-    return result[idx]
-def get_individual(name,p=2,plot=True,address=None):
-    '''
-    Uses the helper function get_ind
-    Args:
-        result
-        names
-        name
-        p: the number of column to read in from result2, optional defaults to 2
-        plot: Boolean. Indicates plot or not, optional, defaults to True
-        address: String. Output file path, optional defaults to name+ind.png
-    '''
-    if address==None:
-        address = name+'ind.png'
-    raw = read_csv('result2.csv',p=p)
-    result,names = raw_transform(raw)
-    data = get_ind(result,names,name)
-    if plot:
-        bar_plot(data,address = address,xlabel = 'channel',ylabel='pearsonr',title='pearson\'s correlation for individual')
-    return data
 def do_tests(p=2):
     raw = read_csv('result2.csv',p=p)
     result,names = raw_transform(raw)
