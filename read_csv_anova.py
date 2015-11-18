@@ -708,4 +708,4 @@ def do_tests(p=2):
     entropy_test(result,names)
 
 if __name__=='__main__':
-    do_tests(p=26)
+    do_tests(p=28)
