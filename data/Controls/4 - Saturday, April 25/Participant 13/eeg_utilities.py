@@ -2,6 +2,7 @@
 # Author: Boris Reuderink
 # Modified: liuliu
  
+import cPickle as pickle
 import logging, re, os.path, StringIO, itertools
 from ConfigParser import SafeConfigParser
 import numpy as np
@@ -185,6 +186,9 @@ def main():
     import glob
     from time import time
     import re
+    import sys
+    '''made some modification to just output raw file. '''
+
     start = time()
     headerName =glob.glob('*.ahdr')[0]
     pattern = re.compile(r'([a-zA-Z]+)([0-9]+)')
@@ -199,7 +203,9 @@ def main():
     print cpt_interval
     cpt_data = [channel_data[cpt_interval[0]:cpt_interval[1]] for channel_data in raw_data]
     cpt_data = np.array(cpt_data)
+    pickle.dump(cpt_data,open('cpt_dump.dat','w')) 
     print 'chopping cpt data finished. ',time()-start
+    sys.exit()
     start = time()
     #now we need to divide up the cpt interval, we know there are 5. 
     interval_times = [int(len(cpt_interval_data)/5) for cpt_interval_data in cpt_data]
@@ -233,7 +239,6 @@ def main():
     #now we need to compare 1+2 to 3+4
     '''
     #did i do this wrongly? This is so interesting.
-    import cPickle as pickle
     pickle.dump(full_wfft,open('full_'+str(subject_num)+'.wfft','w'))
     pickle.dump(easy1_wfft,open('easy1_'+str(subject_num)+'.wfft','w'))
     pickle.dump(easy2_wfft,open('easy2_'+str(subject_num)+'.wfft','w'))

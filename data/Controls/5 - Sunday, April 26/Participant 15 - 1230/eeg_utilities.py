@@ -134,15 +134,16 @@ def read_data(header_fname, marker_fname=None, eeg_fname=None):
   containing_dir = os.path.split(header_fname)[0]
   header = read_header(header_fname)
  
+  if not eeg_fname:
+    # locate EEG file
+    eeg_fname = os.path.join(containing_dir, header['eeg_fname'])
+  X = read_eeg(eeg_fname, header['chan_resolution'])
+  print len(X[0])  
   if not marker_fname:
     # locate marker file
     marker_fname = os.path.join(containing_dir, header['marker_fname'])
   E = read_markers(marker_fname)
  
-  if not eeg_fname:
-    # locate EEG file
-    eeg_fname = os.path.join(containing_dir, header['eeg_fname'])
-  X = read_eeg(eeg_fname, header['chan_resolution'])
  
   return header, E, X
 def getNames(s):
