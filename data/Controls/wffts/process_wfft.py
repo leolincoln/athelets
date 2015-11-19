@@ -12,8 +12,9 @@ def dict_flatten(d):
     return np.array(result).astype(float)
 
 #this checks for the first easy and last easy, namely easy1 and easy3, get pearson's correlations
-def get_diff(fName = None):
-    result_file = '../../../result2.csv'
+def get_diff(fName = None,result_file=None):
+    if result_file is None:
+        result_file = '../../../result2.csv'
     groups = ['easy1','easy2','hard1','hard2','easy3']
     if fName is None:
         fName = '_cpt_David_walsh'
@@ -84,7 +85,7 @@ def get_diff(fName = None):
             corr2345 = stats.pearsonr(easy2_data[i]-hard1_data[i],hard2_data[i]-easy3_data[i])
             corr2435 = stats.pearsonr(easy2_data[i]-hard2_data[i],hard1_data[i]-easy3_data[i])
             corr2534 = stats.pearsonr(easy2_data[i]-easy3_data[i],hard1_data[i]-hard2_data[i])
-
+            correh = stats.pearsonr((easy1_data[i]+easy2_data[i]+easy3_data[i])/3,(hard1_data[i]+hard2_data[i])/2)
 
             #now we dont need the 2-tailed p value.
             #f.write(','.join([fName,str(i),str(corr[0]),str(corr[1])])+'\n')
@@ -114,7 +115,8 @@ def get_diff(fName = None):
                     str(corr1534[0]),\
                     str(corr2345[0]),\
                     str(corr2435[0]),\
-                    str(corr2534[0])])\
+                    str(corr2534[0]),\
+                    str(correh[0])])\
                     +'\n')
 #e12 = (easy1_data + easy2_data)/2
 #h12 = (hard1_data + hard2_data)/2
