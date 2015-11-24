@@ -49,8 +49,8 @@ def plot_raw(fileName=None,outName=None,title=None,sample_rate = 1,average=None,
     f.subplots_adjust(hspace=0)
     #set the xticks to be actual time for sample_rate
     #default sample_rate is 1. 
-    labels = [str(float(item)/sample_rate) for item in axes[-1].get_xticklabels()]
-    axes[-1].set_xticklabels(labels)
+    #labels = [str(float(item)/sample_rate) for item in axes[-1].get_xticklabels()]
+    #axes[-1].set_xticklabels(labels)
     plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
     plt.setp([a.get_yticklabels() for a in f.axes], visible=False)
     plt.show(False)
