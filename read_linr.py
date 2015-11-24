@@ -22,7 +22,8 @@ def csv2matrix(name,burn_line = 1):
 	'''
 	This function reads in the name specified csv and outputs a matrix. 
 	The optional arguments is to specify if the first line can be ignored or not. 
-	Args:
+	Assumes that the file is a matrix other than unformmated data. 
+    Args:
 		name: string of filename
 		burn_line: int of how many lines to burn at front. Defaults to 1. 
 	Returns:
