@@ -1,5 +1,7 @@
 from matplotlib import pylab as plt
 import cPickle as pickle
+
+#TODO: add code for cutting 4 or average 4 for different sample rate, and unify the unit to be seconds. 
 def plot_raw(fileName=None,outName=None,title=None):
     if fileName == None:
         fileName = 'cpt_pro.dat'
