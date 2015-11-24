@@ -2,7 +2,7 @@ from matplotlib import pylab as plt
 import cPickle as pickle
 
 #TODO: add code for cutting 4 or average 4 for different sample rate, and unify the unit to be seconds. 
-def plot_raw(fileName=None,outName=None,title=None):
+def plot_raw(fileName=None,outName=None,title=None,sample_rate = 1,average=None,cut=None):
     if fileName == None:
         fileName = 'cpt_pro.dat'
     if outName == None:
@@ -17,6 +17,10 @@ def plot_raw(fileName=None,outName=None,title=None):
     # Fine-tune figure; make subplots close to each other and hide x ticks for
     # all but bottom plot.
     f.subplots_adjust(hspace=0)
+    #set the xticks to be actual time for sample_rate
+    #default sample_rate is 1. 
+    labels = [str(float(item)/sample_rate) for item in axes[-1].get_xticklabels()]
+    axes[-1].set_xticks(labels)
     plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
     plt.setp([a.get_yticklabels() for a in f.axes], visible=False)
     plt.show(False)
