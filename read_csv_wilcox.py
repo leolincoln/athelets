@@ -50,11 +50,26 @@ def read_csv(fileName,p = 2):
     return raw
 #read in a dictionary of raw and return
 #a list of lists of correlations, and the name correspondences.
-def raw_transform(raw,mode='normal'):
+def raw_transform(raw,mode='normal',limit=9):
+    #NOTE: For limit
+    #set the limit to 9 will limit the profesionals to have only 9. 
+    #FCFS order. 
+    if limit is not None:
+        pro_num = 0
     names = []
     result = []
     max_channels = 0
+
     for name in raw.keys():
+        #if limit is set
+        if limit is not None:
+            if len(name)>4:
+                #now the name is a professional athlet
+                if pro_num+1>9:
+                    continue
+                else:
+                    pro_num+=1
+        #add reference of name into names, having the same index as the result array
         if name not in names:
             names.append(name)
         #idx is the index of the name from names array
@@ -62,17 +77,18 @@ def raw_transform(raw,mode='normal'):
         #allocate new space if the name is new.
         if len(result)<idx+1:
             result.append([])
+        #append each channel into the same row
         for channel in sorted(raw[name].keys()):
             if mode=='even':
                 if channel%2!=0:
                     continue
             result[idx].append(raw[name][channel])
+        #update max_channels variable for cutting data to same amount of channels. 
         if max_channels == 0:
             max_channels = len(result[idx])
         else:
             if len(result[idx])<max_channels:
                 max_channels = len(result[idx])
-
     #now we got our result and names,
     #however we need to cut the result to have the same amount of channels.
     for i in xrange(len(result)):
@@ -734,15 +750,15 @@ def do_tests(p=2):
     raw = read_csv('result2.csv',p=p)
     result,names = raw_transform(raw)
     #entropy_test(result,names)
-    print 'control'
-    control_channel_test(result,names)
-    print 'pro'
-    pro_channel_test(result,names)
+    #print 'control'
+    #control_channel_test(result,names)
+    #print 'pro'
+    #pro_channel_test(result,names)
     print 'pro vs control'
     control_pro_channel_test(result,names)
     print 'pro vs control'
     t_test_provscontrol(result,names)
-    pro_control_all_ttest(result,names)
+    #pro_control_all_ttest(result,names)
     entropy_test(result,names)
 def do_clustering(p=2):
     raw = read_csv('result2.csv',p=p)

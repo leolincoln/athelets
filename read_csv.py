@@ -21,10 +21,16 @@ def bar_plot(data,xlabel,ylabel,title,address):
     N = len(data)
     ind = np.arange(N)    # the x locations for the groups
     width = 0.35       # the width of the bars: can also be len(x) sequence
-    p = plt.bar(ind,data,width,color='r')
-    plt.ylabel(ylabel)
-    plt.xlabel(xlabel)
-    plt.title(title)
+    plt.ylim([0,1.0])
+    fig, ax = plt.subplots()
+    plt.autoscale(enable=False, axis='y')    
+    bars = ax.bar(ind,data,width,color='r')
+    ax.set_ylabel(ylabel)
+    ax.set_xlabel(xlabel)
+    ax.set_xticks(ind + width)
+    ax.set_xticklabels(tuple(range(N)))
+    if title is not None:
+        ax.set_title(title)
     plt.savefig(address)
 
 def mean(l):
@@ -782,10 +788,10 @@ def get_individual(name,p=2,plot=True,address=None,title=None):
         #check title
         if title is None:
             if len(name)>4:
-                title='pearson\'s correlation for Pro'
+                title='pearson\'s correlation for an athlete'
             else:
-                title='pearson\'s correlation for control'
-        bar_plot(data,address = address,xlabel = 'channel',ylabel='pearsonr',title='title')
+                title='pearson\'s correlation for a control'
+        bar_plot(data,address = address,xlabel = 'channel',ylabel='Pearson\'s r',title=title)
     return data
 def do_tests(p=2):
     raw = read_csv('result2.csv',p=p)
