@@ -120,7 +120,7 @@ def read_markers(fname):
     if len(results)==0:
         import sys
         print 'ERROR: marker error,no cpt starting time'
-        sys.exit(1)
+        raise NameError('Marker error')
     results = [results[0],int(results[0])+1024*60*20]
     results = np.asarray(results, int)
     results-= 1  # use zero-based indexing
@@ -237,7 +237,10 @@ def main(folder_name = None):
         match = pattern.match(headername.split('/')[-1])
         subject_num =  int(match.group(2))
         print subject_num
-        header,E,raw_data = read_data(headername,min1=False)
+        try:
+            header,E,raw_data = read_data(headername,min1=False)
+        except NameError:
+            continue
         print 'read data finished. ',time()-start
         start = time()
         #now we need to get the exact cpt section
