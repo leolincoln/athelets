@@ -71,7 +71,6 @@ def read_header(fname):
     # locate EEG and marker files
     eeg_fname = cfg.get('Common Infos', 'DataFile')
     marker_fname = cfg.get('Common Infos', 'MarkerFile')
- 
     return dict(sample_rate=sample_rate, chan_lab=chan_lab, 
       chan_resolution=chan_resolution, eeg_fname=eeg_fname, 
       marker_fname=marker_fname)
@@ -79,21 +78,24 @@ def read_header(fname):
  
 def read_eeg(fname, chan_resolution):
 	#np.atleast_2d View inputs as arrays with at least two dimensions.
-  chan_resolution = np.atleast_2d(chan_resolution)
+  #chan_resolution = np.atleast_2d(chan_resolution)
   nchan = chan_resolution.size
  #read binary file using 'rb' command
   with open(fname, 'rb') as f:
   	#raw is the information read in file. 
     raw = f.read()
-    #size is the length of raw divided by 2 because its binary
-    size = len(raw)/2
+    #size is the length of raw divided by 4 because its binary, and the data is in float32, 4bytes
+    size = len(raw)/4
     #ndarray is an n dimensional array. 
     #nchan is the number of channels
     #size/nchan is the time. 
     #ints is the time vs channel vs data array in type <i2 = np.int16 order in column major order and buffer Used to fill the array with data.
-    ints = np.ndarray((nchan, size/nchan), dtype=np.int16, order='F', buffer=raw)
-    return ints * chan_resolution.T
- 
+    floats = np.ndarray((nchan, size/nchan), dtype=np.float32, order='F', buffer=raw)
+    #results = []
+        #results.append(floats[i]*chan_resolution[i])
+    #print chan_resolution.T.astype(float)
+    return   floats
+    #return floats*chan_resolution.T
  
 def read_markers(fname):
   with open(fname) as f:
@@ -212,7 +214,7 @@ def get_whole():
     print 'saving whole finished. ',str(subject_num),time()-start
 
 #temp = getNames('Liu PreTest 11-7-14')
-def main():
+def main(folder_name = None):
     '''
     automate the process of 1-5 section dividing.
     '''
@@ -220,62 +222,73 @@ def main():
     from time import time
     import re
     start = time()
-    headerName =glob.glob('*.ahdr')[0]
-    pattern = re.compile(r'([a-zA-Z]+)([0-9]+)')
-    match = pattern.match(headerName)
-    subject_num =  int(match.group(2))
+    ahdrs = []
+    from file_utilities import createFolder
+    if folder_name is None:
+        folder_name = './fft2/'
+    createFolder(folder_name)
+    for root, dirs, files in os.walk("./"):
+        for file in files:
+            if file.endswith(".ahdr"):
+                ahdrs.append(os.path.join(root,file)) 
+                print(os.path.join(root, file))
+    for headername in ahdrs:
+        pattern = re.compile(r'([a-zA-Z]+)([0-9]+)')
+        match = pattern.match(headername.split('/')[-1])
+        subject_num =  int(match.group(2))
+        print subject_num
+        header,E,raw_data = read_data(headername,min1=False)
+        print 'read data finished. ',time()-start
+        start = time()
+        #now we need to get the exact cpt section
+        cpt_interval = E
+        print cpt_interval
+        cpt_data = [channel_data[cpt_interval[0]:cpt_interval[1]] for channel_data in raw_data]
+        cpt_data = np.array(cpt_data)
+        print 'chopping cpt data finished. ',time()-start
+        start = time()
+        #now we need to divide up the cpt interval, we know there are 5. 
+        interval_times = [int(len(cpt_interval_data)/5) for cpt_interval_data in cpt_data]
+        full = cpt_data
+        easy1 = [cpt_data[i][0:interval_times[i]] for i in xrange(len(cpt_data))]
+        easy2 = [cpt_data[i][interval_times[i]:2*interval_times[i]] for i in xrange(len(cpt_data))]
+        hard1 = [cpt_data[i][interval_times[i]*2:interval_times[i]*3] for i in xrange(len(cpt_data))]
+        hard2 = [cpt_data[i][interval_times[i]*3:interval_times[i]*4] for i in xrange(len(cpt_data))]
+        easy3 = [cpt_data[i][interval_times[i]*4:] for i in xrange(len(cpt_data))]
+        print 'dividing cpt data finished. ',time()-start
+        start = time()
+        #now we need to do rolling window and fft  on those 
+        full_wfft = [windowlizeChannel(e,sampleRate=1024) for e in full]
+        easy1_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy1]
+        easy2_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy2]
+        hard1_wfft = [windowlizeChannel(h,sampleRate=1024) for h in hard1]
+        hard2_wfft = [windowlizeChannel(h,sampleRate=1024) for h in hard2]
+        easy3_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy3]
+        print 'windowlize fft finished. ',time()-start
+        start = time()
+        '''
+        #############################
+        #no longer needed because we have integrated fft in windowlizeChannel function at anlytics engine
+        #############################
+        #now we need to do fft transform for those 5 windows. 
+        easy1_window_fft = window_fft(easy1_window)
+        easy2_window_fft = window_fft(easy2_window)
+        hard1_window_fft = window_fft(hard1_window)
+        hard2_window_fft = window_fft(hard2_window)
+        easy3_window_fft = window_fft(easy3_window)
+        #now we need to compare 1+2 to 3+4
+        '''
+        #did i do this wrongly? This is so interesting.
+        import cPickle as pickle
 
-    header,E,raw_data = read_data(headerName)
-    print 'read data finished. ',time()-start
-    start = time()
-    #now we need to get the exact cpt section
-    cpt_interval = E
-    print cpt_interval
-    cpt_data = [channel_data[cpt_interval[0]:cpt_interval[1]] for channel_data in raw_data]
-    cpt_data = np.array(cpt_data)
-    print 'chopping cpt data finished. ',time()-start
-    start = time()
-    #now we need to divide up the cpt interval, we know there are 5. 
-    interval_times = [int(len(cpt_interval_data)/5) for cpt_interval_data in cpt_data]
-    full = cpt_data
-    easy1 = [cpt_data[i][0:interval_times[i]] for i in xrange(len(cpt_data))]
-    easy2 = [cpt_data[i][interval_times[i]:2*interval_times[i]] for i in xrange(len(cpt_data))]
-    hard1 = [cpt_data[i][interval_times[i]*2:interval_times[i]*3] for i in xrange(len(cpt_data))]
-    hard2 = [cpt_data[i][interval_times[i]*3:interval_times[i]*4] for i in xrange(len(cpt_data))]
-    easy3 = [cpt_data[i][interval_times[i]*4:] for i in xrange(len(cpt_data))]
-    print 'dividing cpt data finished. ',time()-start
-    start = time()
-    #now we need to do rolling window and fft  on those 
-    full_wfft = [windowlizeChannel(e,sampleRate=1024) for e in full]
-    easy1_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy1]
-    easy2_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy2]
-    hard1_wfft = [windowlizeChannel(h,sampleRate=1024) for h in hard1]
-    hard2_wfft = [windowlizeChannel(h,sampleRate=1024) for h in hard2]
-    easy3_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy3]
-    print 'windowlize fft finished. ',time()-start
-    start = time()
-    '''
-    #############################
-    #no longer needed because we have integrated fft in windowlizeChannel function at anlytics engine
-    #############################
-    #now we need to do fft transform for those 5 windows. 
-    easy1_window_fft = window_fft(easy1_window)
-    easy2_window_fft = window_fft(easy2_window)
-    hard1_window_fft = window_fft(hard1_window)
-    hard2_window_fft = window_fft(hard2_window)
-    easy3_window_fft = window_fft(easy3_window)
-    #now we need to compare 1+2 to 3+4
-    '''
-    #did i do this wrongly? This is so interesting.
-    import cPickle as pickle
-    pickle.dump(full_wfft,open('full_'+str(subject_num)+'.wfft','w'))
-    pickle.dump(easy1_wfft,open('easy1_'+str(subject_num)+'.wfft','w'))
-    pickle.dump(easy2_wfft,open('easy2_'+str(subject_num)+'.wfft','w'))
-    pickle.dump(easy3_wfft,open('easy3_'+str(subject_num)+'.wfft','w'))
-    pickle.dump(hard1_wfft,open('hard1_'+str(subject_num)+'.wfft','w'))
-    pickle.dump(hard2_wfft,open('hard2_'+str(subject_num)+'.wfft','w'))
-    print 'write divided window fft data finished. ',time()-start
-    start = time()
+        pickle.dump(full_wfft,open(folder_name+'full_'+str(subject_num)+'.wfft','w'))
+        pickle.dump(easy1_wfft,open(folder_name+'easy1_'+str(subject_num)+'.wfft','w'))
+        pickle.dump(easy2_wfft,open(folder_name+'easy2_'+str(subject_num)+'.wfft','w'))
+        pickle.dump(easy3_wfft,open(folder_name+'easy3_'+str(subject_num)+'.wfft','w'))
+        pickle.dump(hard1_wfft,open(folder_name+'hard1_'+str(subject_num)+'.wfft','w'))
+        pickle.dump(hard2_wfft,open(folder_name+'hard2_'+str(subject_num)+'.wfft','w'))
+        print 'write divided window fft data finished. ',time()-start
+        start = time()
 def min1(sample_rate = 1000,folder_name=None):
     import os
     if folder_name is None:
@@ -319,5 +332,5 @@ def min1(sample_rate = 1000,folder_name=None):
         pickle.dump(min1_wfft, open(folder_name+'/_'+str(subject_num)+'.wfft','w'))
         
 if __name__ == '__main__':
-    #main()
-    min1()
+    main()
+    #min1()

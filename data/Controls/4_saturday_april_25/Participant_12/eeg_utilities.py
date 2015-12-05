@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from scipy.fftpack import fft
 from pylab import plot,show
 from analytics_engine import windowlizeChannel
-
+import cPickle as pickle
 #TODO:
 # - add encoding of commas (\1)
 # - verify units for resolution in UTF8
@@ -71,7 +71,6 @@ def read_header(fname):
     # locate EEG and marker files
     eeg_fname = cfg.get('Common Infos', 'DataFile')
     marker_fname = cfg.get('Common Infos', 'MarkerFile')
- 
     return dict(sample_rate=sample_rate, chan_lab=chan_lab, 
       chan_resolution=chan_resolution, eeg_fname=eeg_fname, 
       marker_fname=marker_fname)
@@ -79,21 +78,24 @@ def read_header(fname):
  
 def read_eeg(fname, chan_resolution):
 	#np.atleast_2d View inputs as arrays with at least two dimensions.
-  chan_resolution = np.atleast_2d(chan_resolution)
+  #chan_resolution = np.atleast_2d(chan_resolution)
   nchan = chan_resolution.size
  #read binary file using 'rb' command
   with open(fname, 'rb') as f:
   	#raw is the information read in file. 
     raw = f.read()
-    #size is the length of raw divided by 2 because its binary
-    size = len(raw)/2
+    #size is the length of raw divided by 4 because its binary, and the data is in float32, 4bytes
+    size = len(raw)/4
     #ndarray is an n dimensional array. 
     #nchan is the number of channels
     #size/nchan is the time. 
     #ints is the time vs channel vs data array in type <i2 = np.int16 order in column major order and buffer Used to fill the array with data.
-    ints = np.ndarray((nchan, size/nchan), dtype=np.int16, order='F', buffer=raw)
-    return ints * chan_resolution.T
- 
+    floats = np.ndarray((nchan, size/nchan), dtype=np.float32, order='F', buffer=raw)
+    #results = []
+        #results.append(floats[i]*chan_resolution[i])
+    #print chan_resolution.T.astype(float)
+    return   floats
+    #return floats*chan_resolution.T
  
 def read_markers(fname):
   with open(fname) as f:
@@ -126,7 +128,38 @@ def read_markers(fname):
     print events
     return results
  
-def read_data(header_fname, marker_fname=None, eeg_fname=None):
+def read_markers_1min(fname):
+  with open(fname) as f:
+    # setup config reader
+    assert f.readline().strip() == \
+        'Brain Vision Data Exchange Marker File, Version 1.0'
+    cfg = SafeConfigParser()
+    cfg.readfp(f)
+    events = {}
+    results = []
+    for (marker, info) in cfg.items('Marker Infos'):
+        mtype, mdesc, offset, duration, channels = info.split(',')[:5]
+        
+        mdesc = mdesc.lower().split()
+        events[tuple(mdesc)] = offset
+    for mdesc in events.keys():
+        if 'cycling' in mdesc and 'task' in mdesc and 'start' in mdesc:
+            results.insert(0,events[mdesc])
+        elif 'test' not in mdesc and 'task' in mdesc and 'start' in mdesc:
+            results.append(events[mdesc])
+    #print results
+    #print events
+    if len(results)==0:
+        import sys
+        print 'ERROR: marker error,no 1min starting time'
+        sys.exit(1)
+    results = [int(results[0]),int(results[0])]
+    results = np.asarray(results, int)
+    results-= 1  # use zero-based indexing
+    print results
+    print events
+    return results
+def read_data(header_fname, marker_fname=None, eeg_fname=None,min1=False):
   '''
   Read BrainVision Recorder header file, locate and read the marker and EEG
   file. Returns a header dictionary, a matrix with events and the raw EEG.
@@ -137,7 +170,10 @@ def read_data(header_fname, marker_fname=None, eeg_fname=None):
   if not marker_fname:
     # locate marker file
     marker_fname = os.path.join(containing_dir, header['marker_fname'])
-  E = read_markers(marker_fname)
+  if min1:
+    E = read_markers_1min(marker_fname)
+  else:
+    E = read_markers(marker_fname)
  
   if not eeg_fname:
     # locate EEG file
@@ -242,6 +278,48 @@ def main():
     pickle.dump(hard2_wfft,open('hard2_'+str(subject_num)+'.wfft','w'))
     print 'write divided window fft data finished. ',time()-start
     start = time()
- 
+def min1(sample_rate = 1000,folder_name=None):
+    import os
+    if folder_name is None:
+        folder_name = './min1_wfft'
+    ahdrs = []
+    for root, dirs, files in os.walk("./"):
+        for file in files:
+            if file.endswith(".ahdr"):
+                ahdrs.append(os.path.join(root,file)) 
+                print(os.path.join(root, file))
+    #now read 'timeout_chart.csv' to get time outs in unit of s
+    timeouts = {}
+    with open('timeout_chart.csv','r') as f:
+        f.readline()
+        for line in f:
+            #participant, timeouts, hours
+            p,t,h = line.split(',')
+            timeouts[int(p)] = float(t)
+            #some does not have 60s of exercise. I will just pick 30s for now. 
+        print timeouts
+
+    for headername in ahdrs:
+        pattern = re.compile(r'([a-zA-Z]+)([0-9]+)')
+        match = pattern.match(headername.split('/')[-1])
+        subject_num =  int(match.group(2))
+        print subject_num
+        header,E,raw_data = read_data(headername,min1=True)
+        print 'reading data: ',headername,''
+        end_time = E[0]+timeouts[subject_num]*sample_rate
+        start_time = end_time - 30 * sample_rate
+        print start_time,end_time
+        print timeouts[subject_num]
+        cpt_interval = [start_time,end_time]
+        cpt_data = [channel_data[cpt_interval[0]:cpt_interval[1]] for channel_data in raw_data]
+        cpt_data = np.array(cpt_data)
+        print 'chopping cpt data finished'
+        min1 = [cpt_data[i][cpt_interval[0]:cpt_interval[1]] for i in xrange(len(cpt_data))]
+        min1_wfft = [windowlizeChannel(e,sampleRate=1000) for e in min1]
+        from file_utilities import createFolder
+        createFolder(folder_name)
+        pickle.dump(min1_wfft, open(folder_name+'/_'+str(subject_num)+'.wfft','w'))
+        
 if __name__ == '__main__':
-    main()
+    #main()
+    min1()
