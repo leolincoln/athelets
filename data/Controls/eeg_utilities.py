@@ -9,7 +9,7 @@ import sys
 import matplotlib.pyplot as plt
 from scipy.fftpack import fft
 from pylab import plot,show
-from analytics_engine import windowlizeChannel
+from analytics_engine import windowlizeChannel,combineFfts
 import cPickle as pickle
 #TODO:
 # - add encoding of commas (\1)
@@ -214,7 +214,9 @@ def get_whole():
     print 'saving whole finished. ',str(subject_num),time()-start
 
 #temp = getNames('Liu PreTest 11-7-14')
-def main(folder_name = None):
+#sample rate for pros/athlets are 250, 
+#sample rate for controls are 1000
+def main(sample_rate=1000,folder_name = None):
     '''
     automate the process of 1-5 section dividing.
     '''
@@ -261,12 +263,12 @@ def main(folder_name = None):
         print 'dividing cpt data finished. ',time()-start
         start = time()
         #now we need to do rolling window and fft  on those 
-        full_wfft = [windowlizeChannel(e,sampleRate=1024) for e in full]
-        easy1_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy1]
-        easy2_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy2]
-        hard1_wfft = [windowlizeChannel(h,sampleRate=1024) for h in hard1]
-        hard2_wfft = [windowlizeChannel(h,sampleRate=1024) for h in hard2]
-        easy3_wfft = [windowlizeChannel(e,sampleRate=1024) for e in easy3]
+        full_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in full]
+        easy1_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in easy1]
+        easy2_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in easy2]
+        hard1_wfft = [combineFfts(windowlizeChannel(h,sampleRate=sample_rate)) for h in hard1]
+        hard2_wfft = [combineFfts(windowlizeChannel(h,sampleRate=sample_rate)) for h in hard2]
+        easy3_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in easy3]
         print 'windowlize fft finished. ',time()-start
         start = time()
         '''
@@ -328,12 +330,12 @@ def min1(sample_rate = 1000,folder_name=None):
         cpt_data = [channel_data[cpt_interval[0]:cpt_interval[1]] for channel_data in raw_data]
         cpt_data = np.array(cpt_data)
         print 'chopping cpt data finished'
-        min1 = [cpt_data[i][cpt_interval[0]:cpt_interval[1]] for i in xrange(len(cpt_data))]
+        min1 = [combineFfts(cpt_data[i][cpt_interval[0]:cpt_interval[1]]) for i in xrange(len(cpt_data))]
         min1_wfft = [windowlizeChannel(e,sampleRate=1000) for e in min1]
         from file_utilities import createFolder
         createFolder(folder_name)
         pickle.dump(min1_wfft, open(folder_name+'/_'+str(subject_num)+'.wfft','w'))
         
 if __name__ == '__main__':
-    main()
+    main(1000)
     #min1()
