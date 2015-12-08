@@ -121,7 +121,7 @@ def read_markers(fname):
         import sys
         print 'ERROR: marker error,no cpt starting time'
         raise NameError('Marker error')
-    results = [results[0],int(results[0])+1024*60*20]
+    results = [results[0],int(results[0])+1000*60*20]
     results = np.asarray(results, int)
     results-= 1  # use zero-based indexing
     print results
@@ -209,7 +209,7 @@ def get_whole():
     cpt_data = [channel_data[cpt_interval[0]:cpt_interval[1]] for channel_data in raw_data]
     cpt_data = np.array(cpt_data)
     print 'chopping cpt data finished. ',time()-start
-    whole = [windowlizeChannel(w,sampleRate=1024) for w in cpt_data]
+    whole = [windowlizeChannel(w,sampleRate=1000) for w in cpt_data]
     pickle.dump(whole,open('whole_'+str(subject_num)+'.wfft','w'))
     print 'saving whole finished. ',str(subject_num),time()-start
 
@@ -263,12 +263,12 @@ def main(sample_rate=1000,folder_name = None):
         print 'dividing cpt data finished. ',time()-start
         start = time()
         #now we need to do rolling window and fft  on those 
-        full_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in full]
-        easy1_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in easy1]
-        easy2_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in easy2]
-        hard1_wfft = [combineFfts(windowlizeChannel(h,sampleRate=sample_rate)) for h in hard1]
-        hard2_wfft = [combineFfts(windowlizeChannel(h,sampleRate=sample_rate)) for h in hard2]
-        easy3_wfft = [combineFfts(windowlizeChannel(e,sampleRate=sample_rate)) for e in easy3]
+        #full_wfft = [windowlizeChannel(e,sampleRate=sample_rate) for e in full]
+        easy1_wfft = [windowlizeChannel(e,sampleRate=sample_rate) for e in easy1]
+        easy2_wfft = [windowlizeChannel(e,sampleRate=sample_rate) for e in easy2]
+        hard1_wfft = [windowlizeChannel(h,sampleRate=sample_rate) for h in hard1]
+        hard2_wfft = [windowlizeChannel(h,sampleRate=sample_rate) for h in hard2]
+        easy3_wfft = [windowlizeChannel(e,sampleRate=sample_rate) for e in easy3]
         print 'windowlize fft finished. ',time()-start
         start = time()
         '''
@@ -286,7 +286,7 @@ def main(sample_rate=1000,folder_name = None):
         #did i do this wrongly? This is so interesting.
         import cPickle as pickle
 
-        pickle.dump(full_wfft,open(folder_name+'full_'+str(subject_num)+'.wfft','w'))
+        pickle.dump(full,open(folder_name+'full_'+str(subject_num)+'.dat','w'))
         pickle.dump(easy1_wfft,open(folder_name+'easy1_'+str(subject_num)+'.wfft','w'))
         pickle.dump(easy2_wfft,open(folder_name+'easy2_'+str(subject_num)+'.wfft','w'))
         pickle.dump(easy3_wfft,open(folder_name+'easy3_'+str(subject_num)+'.wfft','w'))
@@ -337,5 +337,5 @@ def min1(sample_rate = 1000,folder_name=None):
         pickle.dump(min1_wfft, open(folder_name+'/_'+str(subject_num)+'.wfft','w'))
         
 if __name__ == '__main__':
-    main(1000)
+    main()
     #min1()

@@ -43,7 +43,7 @@ def get_whole(fName):
     start = time()
     #now we need to get the exact cpt section
     cpt_data = data
-    whole = [windowlizeChannel(w,sampleRate=256) for w in cpt_data]
+    whole = [windowlizeChannel(w,sampleRate=250) for w in cpt_data]
     pickle.dump(whole,open('../prowffts/whole_'+str(subject_num)+'.wfft','w'))
     print 'saving whole finished.',str(subject_num),time()-start
 
@@ -90,11 +90,11 @@ def main(fName):
     print 'dividing cpt data finished. ',time()-start
     start = time()
     #now we need to do rolling window and fft  on those
-    easy1_wfft = [windowlizeChannel(e,sampleRate=256) for e in easy1]
-    easy2_wfft = [windowlizeChannel(e,sampleRate=256) for e in easy2]
-    hard1_wfft = [windowlizeChannel(h,sampleRate=256) for h in hard1]
-    hard2_wfft = [windowlizeChannel(h,sampleRate=256) for h in hard2]
-    easy3_wfft = [windowlizeChannel(e,sampleRate=256) for e in easy3]
+    easy1_wfft = [windowlizeChannel(e,sampleRate=250) for e in easy1]
+    easy2_wfft = [windowlizeChannel(e,sampleRate=250) for e in easy2]
+    hard1_wfft = [windowlizeChannel(h,sampleRate=250) for h in hard1]
+    hard2_wfft = [windowlizeChannel(h,sampleRate=250) for h in hard2]
+    easy3_wfft = [windowlizeChannel(e,sampleRate=250) for e in easy3]
     print 'windowlize fft finished. ',time()-start
     start = time()
     '''
