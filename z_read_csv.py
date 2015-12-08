@@ -1,8 +1,9 @@
 '''
 This file is used to read csv file and then come up with clustering result.
 The csv files should be in such format: name, pearsonr1, pearsonr2, ...., pearsonrn
-Pearsonr refers to the pearson correlation coefficient. 
+Pearsonr refers to the pearson correlation coefficient.
 This file can also be used to do T-Test on means for athletes or controls.
+Difference is just when reading in the correlations, I used Z transformed correlation
 Main function: Main()
 '''
 import math
@@ -11,6 +12,11 @@ from analytics_engine import ssCluster
 from scipy import signal,stats
 from matplotlib import pylab as plt
 from sklearn import svm
+from math import log
+def z_transform(r):
+    r = float(r)
+    return 0.5*(log(1+r)-log(1-r))
+
 def bar_plot(data,xlabel,ylabel,title,address):
     '''
     data: array of number
@@ -24,7 +30,7 @@ def bar_plot(data,xlabel,ylabel,title,address):
     width = 0.35       # the width of the bars: can also be len(x) sequence
     plt.ylim([0,1.0])
     fig, ax = plt.subplots()
-    plt.autoscale(enable=False, axis='y')    
+    plt.autoscale(enable=False, axis='y')
     bars = ax.bar(ind,data,width,color='r')
     ax.set_ylabel(ylabel)
     ax.set_xlabel(xlabel)
@@ -70,7 +76,7 @@ def read_csv(fileName,p = 2):
             #p1324 = data[7]
             if raw.get(name) == None:
                 raw[name] = {}
-            raw[name][int(channel)]= float(pearsonr)
+            raw[name][int(channel)]= z_transform(float(pearsonr))
     return raw
 #read in a dictionary of raw and return
 #a list of lists of correlations, and the name correspondences.
@@ -123,7 +129,7 @@ def get_cluster(result=None,names=None):
     if result is None and names is None:
         raw = read_csv('result2.csv')
         result,names = raw_transform(raw)
-    
+
     #cluster_result = ssCluster(data = np.array(result))
     cluster_result = ssCluster(data = np.array(result),show=False)
     print cluster_result
@@ -518,7 +524,7 @@ def control_pro_channel_test(result,names):
     print 'mean_:',group15.mean(),mean(group15_control)
     rvs = stats.ttest_ind(group15, group15_control)
     print 'group15',rvs
-    
+
     group567 = np.array(group567)
     print 'mean_:',group567.mean(),mean(group567_control)
     #group567_all = np.array(group567_all)
@@ -843,11 +849,11 @@ def plot2(C=9999999):
     print X,Y
     clf = svm.SVC(kernel = 'linear',C=C)
     clf.fit(X, Y)
-    w = clf.coef_[0] 
+    w = clf.coef_[0]
     print w
     print clf.intercept_
-    a = -w[0] / w[1] 
-    xx = np.linspace(min(X[:,0]), max(X[:,0])) 
+    a = -w[0] / w[1]
+    xx = np.linspace(min(X[:,0]), max(X[:,0]))
     print xx
     yy = a * xx- (clf.intercept_[0]) / w[1]
     print yy
@@ -857,12 +863,7 @@ def plot2(C=9999999):
     ax.set_xlabel('group8910')
     ax.set_ylabel('group1112')
     plt.show(False)
-    
-    from som_test import test_som
-    print ath[:,0]
-    test_som(ath[:,0],ath[:,1],control[:,0],control[:,1],label1='athletes',label2='controls',xlabel='Pearon\'s r for group 8910',ylabel='Pearon\'s r for group 1112')
-    return None
-    #return ath,control
+    return ath,control
 
 if __name__=='__main__':
     #do_clustering()

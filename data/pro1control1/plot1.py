@@ -1,7 +1,6 @@
 from matplotlib import pylab as plt
 import cPickle as pickle
 import numpy as np
-
 def average_array(a,average):
     result = []
     i= 0
@@ -16,7 +15,8 @@ def cut_array(a,cut):
         result.append(a[i+cut/2])
         i +=cut
     return result
-def plot_raw_channel(channel,fileName=None,outName=None,title=None,sample_rate = None,average=None,cut=None,ratio=1):
+
+def plot_raw_channel(channel,fileName=None,outName=None,title=None,sample_rate = None,average=None,cut=None,ratio=1,xlim=None):
     channel = int(channel)
     if fileName == None:
         fileName = 'cpt_pro.dat'
@@ -41,7 +41,10 @@ def plot_raw_channel(channel,fileName=None,outName=None,title=None,sample_rate =
     if cut is not None:
         pro_cut = []
     f, ax = plt.subplots()
-    ax.set_xlim(0,1200)
+    if xlim is None:
+        ax.set_xlim(0,1200)
+    else:
+        ax.set_xlim(0,float(xlim))
     ax.set_ylim(-50,50)
     ax.autoscale(enable=False,axis='y')
     ax.plot(np.arange(len(pro[channel]))/sample_rate,np.array(pro[channel])*ratio)
@@ -99,7 +102,8 @@ def plot_raw(fileName=None,outName=None,title=None,sample_rate = None,average=No
     plt.show(False)
     f.savefig(outName)
 if __name__ == '__main__':
-    plot_raw(fileName = 'cpt_13.dat',outName='control_average.png',average=4,sample_rate=250,ratio=0.00488281)
-    plot_raw(fileName='cpt_pro.dat',outName='pro.png',sample_rate=250)
-    plot_raw_channel(2,fileName = 'cpt_13.dat',outName='control_average_channel.png',average=4,sample_rate=250,ratio=0.00488281)
-    plot_raw_channel(2,fileName='cpt_pro.dat',outName='pro_channel.png',sample_rate=250)
+    #plot_raw(fileName = 'cpt_13.dat',outName='control_average.png',average=4,sample_rate=250,ratio=0.00488281)
+    #plot_raw(fileName = 'cpt_13.dat',outName='control.png',sample_rate=1000,ratio=0.00488281)
+    plot_raw(fileName='cpt_control.dat',outName='control.png',sample_rate=1000)
+    plot_raw_channel(2,fileName = 'cpt_control.dat',outName='control_channel.png',sample_rate=1000,ratio=0.00488281,xlim=5)
+    #plot_raw_channel(2,fileName='cpt_pro.dat',outName='pro_channel.png',sample_rate=250,xlim=5)
