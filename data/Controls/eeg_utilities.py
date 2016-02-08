@@ -231,7 +231,7 @@ def main(sample_rate=1000,folder_name = None):
     createFolder(folder_name)
     for root, dirs, files in os.walk("./"):
         for file in files:
-            if file.endswith(".ahdr"):
+            if file.endswith(".vhdr"):
                 ahdrs.append(os.path.join(root,file)) 
                 print(os.path.join(root, file))
     for headername in ahdrs:
