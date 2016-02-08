@@ -809,11 +809,19 @@ def do_tests(p=2):
     t_test_provscontrol(result,names)
     pro_control_all_ttest(result,names)
     entropy_test(result,names)
-def do_clustering(p=2):
+def do_clustering(p=3):
     raw = read_csv('result2.csv',p=p)
     result,names = raw_transform(raw,mode='even')
     print names
     get_cluster(result,names)
+    from sompy import main as som
+    labels = []
+    for i in range(len(names)):
+        if len(names[i])>3:
+            labels.append('A')
+        else:
+            labels.append('C')
+    som(colors=result,width=500,height=500,labels=labels)
 
 def plot2(C=9999999):
     '''
@@ -865,6 +873,5 @@ def plot2(C=9999999):
     #return ath,control
 
 if __name__=='__main__':
-    #do_clustering()
+    do_clustering()
     #do_tests(p=28)
-    pass
