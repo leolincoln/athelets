@@ -1,0 +1,73 @@
+Brain Vision V-Amp Data Header File Version 1.0
+; Data created by the Vision Recorder
+
+[Common Infos]
+Codepage=UTF-8
+DataFile=AthleteStudy000009.eeg
+MarkerFile=AthleteStudy000009.vmrk
+DataFormat=BINARY
+; Data orientation: MULTIPLEXED=ch1,pt1, ch2,pt1 ...
+DataOrientation=MULTIPLEXED
+NumberOfChannels=17
+; Sampling interval in microseconds
+SamplingInterval=1000
+
+[Binary Infos]
+BinaryFormat=IEEE_FLOAT_32
+
+[Channel Infos]
+; Each entry: Ch<Channel number>=<Name>,<Reference channel name>,
+; <Resolution in "Unit">,<Unit>, Future extensions..
+; Fields are delimited by commas, some fields might be omitted (empty).
+; Commas in channel names are coded as "\1".
+Ch1=Fp1,,0.0488281,µV
+Ch2=Fp2,,0.0488281,µV
+Ch3=Fz,,0.0488281,µV
+Ch4=Fc5,,0.0488281,µV
+Ch5=Fc6,,0.0488281,µV
+Ch6=C3,,0.0488281,µV
+Ch7=CZ,,0.0488281,µV
+Ch8=C4,,0.0488281,µV
+Ch9=P3,,0.0488281,µV
+Ch10=Pz,,0.0488281,µV
+Ch11=P4,,0.0488281,µV
+Ch12=O1,,0.0488281,µV
+Ch13=O2,,0.0488281,µV
+Ch14=IZ,,0.0488281,µV
+Ch15=E1,,0.0488281,µV
+Ch16=E2,,0.0488281,µV
+
+[Signature]
+SignatureLength=4352
+Key1=0df2b72a48b7d74a542e3e8cd84e4e98dd13c7241df02b6de50a56b8c9fa2347
+Key2=49e6781a40e02103d4b576e7c0d93093c752ede6d16dc2cdbb5e0171d0945add
+Key3=98e326d58544c1e65837a316cddf95432142f06a585c681ec3bca5e91abd3efc
+Key4=4cbb90501cd9b1974580270e8438795fadbbdf4efafc154e65e96fc108a80bd4
+Key5=6420565f61322b98651dc86075585fb3a3cf867565ecc73ecc1f8ccf3573632e
+Key6=749ab5895e465d33cfaaf4757885453894056e3088a57618747fdb5ba59d2ec1
+Key7=b57397fdafe7b95c04a600f019dd58eabc7cd9106ab852524e42d57271a8dc61
+Key8=5b16b69371f10cdee4899e026ffc6638f6897969eb3e5d6a17318ff39e1b0f6e
+Key9=2d432340770e780f989c542da20f4c7bbd38c6231b8bc95265b89d832597ddb9
+Key10=ecaa74e1e988b52a614d4d6f94fcb89c2fadc0c3a2e6f66ae731902b14e067a8
+Key11=95f3cb803e2cb935cab259057f523051b1d9ed0a4b4a7fe7ab8fb960e55f61c8
+Key12=6ad36b0e218d040b7b821012daf504a385dfe0129321a340ebdb60522372ee5e
+Key13=b0392b52541c1ae4b5c90dd89d822a2fdde8f46f5f301f51e5499c35a0c4ff60
+Key14=43e14b71fccb28a78f30c751fb98c01e0d2a8f22a088cbd79d0506de3b92023c
+Key15=bcefcd8ae6a1c042142d49448d3c0b3aa2e17b8002660c014181db95b8501d97
+Key16=d95c4fe8ed515db68a094b1144f0affe1e944719d0cf45e5d8fb250465df2385
+Signature1=002e0c198aca75e74a1d8bfa3572d23c15aae966cfb7322e0261d37a3864ee23
+Signature2=2e41ac3271908d368544404d4a17cf7bbf9f443a9c7d31bb2d9cceab9031ff34
+Signature3=2ebb5f55034279495d1135ee895e35667cf40c909635c845dacc7c5b2735463b
+Signature4=004cdf9cae9daceefe4aea6a237db1df6b79fa03252152d47041712e5383e017
+Signature5=4d7fcb7982999a406aab42406977c1bacd6d4a4fb4f91b4d0d945f0223e81afe
+Signature6=caf045ed6ac8c7fc7de604b9f1967f40c4b4d187b35b623e4ff41b8f7af046dd
+Signature7=d5e0d251cba5b88a1ca23e95bbc3c7451d039faa5656dcef5032c20f7017a452
+Signature8=9b3c558ec5f1d0d40adfbf34a5c41692efd0e23b0ea86cf13ef5e75002f1e457
+Signature9=9c57f36f65555de52306cd1bc7693ff3170da13b3c3b7a28c0e5856c595b6d32
+Signature10=ce79895a18993dc77a562cb5ad57b02a969fb70d58063389c6a5b3bab0d7d6d2
+Signature11=0999a9b5069b0d9abecbd130dd8853e8478b34667e7c494150f0e7304105685e
+Signature12=f9d5a49219a2c6194974240de6654df86c052a40cbbbe6aa1626991c2a8562a5
+Signature13=4b3cc88bf5d14316d7af11fd7821e44e44f8e312f42457e1273c91cc46c1ec79
+Signature14=80fc355f6a9288c2f05ca8ba34edb9d05ff6f084e1ac0463a6d3f1d50abfe078
+Signature15=40721ced26515177c63dc5b4d47055bbd853048350015b3455a05b35f51c29d2
+Signature16=dd61be289af87c137845064e8ceef4296d0d538b920227e00ff84fd8c717501c

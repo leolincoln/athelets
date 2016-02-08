@@ -216,7 +216,7 @@ def get_whole():
 #temp = getNames('Liu PreTest 11-7-14')
 #sample rate for pros/athlets are 250, 
 #sample rate for controls are 1000
-def main(sample_rate=1000,folder_name = None):
+def main(sample_rate=1000,folder_name = None,search_folder= './'):
     '''
     automate the process of 1-5 section dividing.
     '''
@@ -229,11 +229,13 @@ def main(sample_rate=1000,folder_name = None):
     if folder_name is None:
         folder_name = './fft2/'
     createFolder(folder_name)
-    for root, dirs, files in os.walk("./"):
+    print 'serach folder:',search_folder
+    for root, dirs, files in os.walk(search_folder):
         for file in files:
             if file.endswith(".vhdr"):
                 ahdrs.append(os.path.join(root,file)) 
                 print(os.path.join(root, file))
+    print 'ahdr files:',ahdrs
     for headername in ahdrs:
         pattern = re.compile(r'([a-zA-Z]+)([0-9]+)')
         match = pattern.match(headername.split('/')[-1])
@@ -243,6 +245,7 @@ def main(sample_rate=1000,folder_name = None):
             header,E,raw_data = read_data(headername,min1=False)
         except NameError:
             continue
+        #TODO
         print 'read data finished. ',time()-start
         start = time()
         #now we need to get the exact cpt section
@@ -340,5 +343,5 @@ if __name__ == '__main__':
     folderName = None
     if len(sys.argv)>=2:
         folderName = sys.argv[1]
-    main(folder_name = folderName)
+    main(search_folder = folderName)
     #min1()

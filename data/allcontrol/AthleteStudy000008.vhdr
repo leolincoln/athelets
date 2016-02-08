@@ -1,0 +1,128 @@
+Brain Vision V-Amp Data Header File Version 1.0
+; Data created by the Vision Recorder
+
+[Common Infos]
+Codepage=UTF-8
+DataFile=AthleteStudy000008.eeg
+MarkerFile=AthleteStudy000008.vmrk
+DataFormat=BINARY
+; Data orientation: MULTIPLEXED=ch1,pt1, ch2,pt1 ...
+DataOrientation=MULTIPLEXED
+NumberOfChannels=17
+; Sampling interval in microseconds
+SamplingInterval=1000
+
+[Binary Infos]
+BinaryFormat=IEEE_FLOAT_32
+
+[Channel Infos]
+; Each entry: Ch<Channel number>=<Name>,<Reference channel name>,
+; <Resolution in "Unit">,<Unit>, Future extensions..
+; Fields are delimited by commas, some fields might be omitted (empty).
+; Commas in channel names are coded as "\1".
+Ch1=Fp1,,0.0488281,µV
+Ch2=Fp2,,0.0488281,µV
+Ch3=Fz,,0.0488281,µV
+Ch4=Fc5,,0.0488281,µV
+Ch5=Fc6,,0.0488281,µV
+Ch6=C3,,0.0488281,µV
+Ch7=CZ,,0.0488281,µV
+Ch8=C4,,0.0488281,µV
+Ch9=P3,,0.0488281,µV
+Ch10=Pz,,0.0488281,µV
+Ch11=P4,,0.0488281,µV
+Ch12=O1,,0.0488281,µV
+Ch13=O2,,0.0488281,µV
+Ch14=IZ,,0.0488281,µV
+Ch15=E1,,0.0488281,µV
+Ch16=E2,,0.0488281,µV
+
+[Signature]
+SignatureLength=4352
+Key1=585bbe37f5c28c912727cdf01eba1b0049aeef352edc9189959099de424b9b4a
+Key2=d95b936400531dfcdabbe5c6a1478cd08345188482ab2433ca5e42b7abfc69e2
+Key3=ad5dcb8a20681d33b54128de25880b17d319b1e9ee228e2db42ffb57b716c401
+Key4=828c94d3b373863cf148691d0f62fe9991352e342332a28b71383a8059c7137f
+Key5=f2791dafebf531e402fcad0e757a1e120efaec6979cc04c755fa5ca87e3fb5e2
+Key6=4e3e2af7b386757f323eaa1b35fd644ef70f14049d59ffa373569f7a00431cc9
+Key7=abe36a4ba86f8cb69ea9592e389ed3dd38345b91bb2351a34162d6138c8845d4
+Key8=c566d201076f1558e9a92394e33ad72ee6436316f4300a8b708843f55facd0e7
+Key9=b6dfee0d3651090190a888e0e3c53c8caae04656d90db72eed629e054b04c314
+Key10=1923bd0543ec5c8411a84c913d1a465430ca88f8b356288f9489e39fde3d249a
+Key11=c74fc7e16d01c8538cd3711292595a025c5938403e93b7bfd7aba1fb7f74bcd9
+Key12=3d116a8b7a1b93cb99f8487b75c9e6111d266da7a563728a2b28dc4cf3380aff
+Key13=5a60e03fdc0f835a4d58bc1b7114f6c42d899a5e54d28364cfccaa96d29c618b
+Key14=3f8b8630bbea257015534f5fc9b56e0f4a575346c8129ee8681d1f01bf244adf
+Key15=9a177a3e6ba7b906b66717b76ad36071e0c6ba682d7fce501e8c7cc898fc800c
+Key16=efd3c5c811c6a84f9cb896a234ebc279d0fb209d60ccf35f3b96a0a22c0db232
+Signature1=07178f007b1bd2cd74339aa0728a766b2947f3b79a2d66e8f8af95429f8a3696
+Signature2=ad17d659c97929e14842e9011072dbb56dbfd40631e70440611b434ec8145119
+Signature3=a52bf5c36b2e041ae873dd74b1b48ca178b5cba8e30f81593bcfbddb169751ff
+Signature4=0022ea404bf3fd5ac6f8ff34bd566cd2beae8105f991a2ac4002ef8d99ea3e5f
+Signature5=e2542e8d2e3f9a4525388136b4077528343a7297144cbcd5b35b585e558d5bce
+Signature6=33119c6ce604bf21d266e71699a3ff9c3cd901fccf1f411cbde5c4bae2d9b468
+Signature7=c3bf7906d8e768e9f89c09859cda1ce5085fd9777e01fc33e3bfee2785480865
+Signature8=cc964bd332a8b207e30767ca54e6d8fdb02880ae030bfa1e774ceebf4674005b
+Signature9=1a66403db3934df1840a559d1763929033f0abde2b14e06eb6695cb6ef6cf8c6
+Signature10=633695b9b80561932288ae18454fb0ec09b34e71c24f81df24610985de774c4f
+Signature11=f413d46dff53b058bb585f49b00a515716a78973ebee76b1e1696d28abb432a7
+Signature12=fe5cf9f9ad3b6c118adff95404cf5a1ba46023e222564dcb67a0d9948ae61d52
+Signature13=427ef060b77e47b432f5cd667e829456ae6a39113d9a638f02dc5b025003aeb6
+Signature14=513373e169b356118953578590b5de5f0b3303ea6aa211fb9b1bd5c9bff6de29
+Signature15=8fa68ff9ee22043a44c1d9469c8b9abb538dddc842a2d0dc87070237e20b169a
+Signature16=16039cb9f3ace92f2bf9214248475148faf6a76854e8a8fe702b5a41caed24a6
+
+[Comment]
+
+A m p l i f i e r  S e t u p
+============================
+Number of channels: 16
+Sampling Rate [Hz]: 1000
+Sampling Interval [µS]: 1000
+
+Channels
+--------
+#     Name      Phys. Chn.    Resolution / Unit   Low Cutoff [s]   High Cutoff [Hz]   Notch [Hz]    Gradient         Offset
+1     Fp1         1          0.0488281 µV             DC                0              Off
+2     Fp2         2          0.0488281 µV             DC                0              Off
+3     Fz          3          0.0488281 µV             DC                0              Off
+4     Fc5         4          0.0488281 µV             DC                0              Off
+5     Fc6         5          0.0488281 µV             DC                0              Off
+6     C3          6          0.0488281 µV             DC                0              Off
+7     CZ          7          0.0488281 µV             DC                0              Off
+8     C4          8          0.0488281 µV             DC                0              Off
+9     P3          9          0.0488281 µV             DC                0              Off
+10    Pz          10         0.0488281 µV             DC                0              Off
+11    P4          11         0.0488281 µV             DC                0              Off
+12    O1          12         0.0488281 µV             DC                0              Off
+13    O2          13         0.0488281 µV             DC                0              Off
+14    IZ          14         0.0488281 µV             DC                0              Off
+15    E1          15         0.0488281 µV             DC                0              Off
+16    E2          16         0.0488281 µV             DC                0              Off
+
+S o f t w a r e  F i l t e r s
+==============================
+Disabled
+
+
+Test Signal from actiCAP is used.
+Impedances Imported from actiCAP Control Software:
+Impedance [kOhm] at 16:57:21 :
+Fp1:      Out of Range!
+Fp2:         61
+Fz:         116
+Fc5:         91
+Fc6:        105
+C3:          70
+CZ:       Out of Range!
+C4:          89
+P3:          26
+Pz:         134
+P4:          61
+O1:       Out of Range!
+O2:          55
+IZ:         161
+E1:       Out of Range!
+E2:       Out of Range!
+Ref:         46
+Gnd:      Out of Range!
