@@ -84,7 +84,7 @@ def plot_raw(fileName=None,outName=None,title=None,sample_rate = None,average=No
         axes[i].set_xlim(0,1200)
         axes[i].set_ylim(-50, 50)
         axes[i].autoscale(enable=False, axis='y', tight=None)
-        print np.array(pro[i][1000:1010])*ratio
+        print np.array(pro[i][3000:5000])*ratio
         axes[i].plot(np.arange(len(pro[i]))/sample_rate,np.array(pro[i])*ratio) 
     if title is not None:
         axes[0].set_title(title)
@@ -104,6 +104,6 @@ def plot_raw(fileName=None,outName=None,title=None,sample_rate = None,average=No
 if __name__ == '__main__':
     #plot_raw(fileName = 'cpt_13.dat',outName='control_average.png',average=4,sample_rate=250,ratio=0.00488281)
     #plot_raw(fileName = 'cpt_13.dat',outName='control.png',sample_rate=1000,ratio=0.00488281)
-    plot_raw(fileName='cpt_control.dat',outName='control.png',sample_rate=1000)
+    plot_raw(fileName='cpt_control.dat',outName='control.png',sample_rate=1000,ratio=0.00488)
     plot_raw_channel(2,fileName = 'cpt_control.dat',outName='control_channel.png',sample_rate=1000,ratio=0.00488281,xlim=5)
     #plot_raw_channel(2,fileName='cpt_pro.dat',outName='pro_channel.png',sample_rate=250,xlim=5)
