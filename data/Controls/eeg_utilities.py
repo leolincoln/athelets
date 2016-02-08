@@ -337,5 +337,8 @@ def min1(sample_rate = 1000,folder_name=None):
         pickle.dump(min1_wfft, open(folder_name+'/_'+str(subject_num)+'.wfft','w'))
         
 if __name__ == '__main__':
-    main()
+    folderName = None
+    if len(sys.argv)>=2:
+        folderName = sys.argv[1]
+    main(folder_name = folderName)
     #min1()
