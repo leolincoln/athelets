@@ -104,6 +104,6 @@ def plot_raw(fileName=None,outName=None,title=None,sample_rate = None,average=No
 if __name__ == '__main__':
     #plot_raw(fileName = 'cpt_13.dat',outName='control_average.png',average=4,sample_rate=250,ratio=0.00488281)
     #plot_raw(fileName = 'cpt_13.dat',outName='control.png',sample_rate=1000,ratio=0.00488281)
-    plot_raw(average=4,fileName='cpt_control.dat',outName='control.png',sample_rate=1000,ratio=0.00488)
-    plot_raw_channel(2,average=4,fileName = 'cpt_control.dat',outName='control_channel.png',sample_rate=1000,ratio=0.00488281,xlim=5)
+    plot_raw(average=4,fileName='cpt_control.dat',outName='control.png',sample_rate=250,ratio=0.00488)
+    plot_raw_channel(2,average=4,fileName = 'cpt_control.dat',outName='control_channel.png',sample_rate=250,ratio=0.00488281,xlim=5)
     #plot_raw_channel(2,fileName='cpt_pro.dat',outName='pro_channel.png',sample_rate=250,xlim=5)
