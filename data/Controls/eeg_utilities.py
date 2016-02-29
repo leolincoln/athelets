@@ -82,20 +82,19 @@ def read_eeg(fname, chan_resolution):
   nchan = chan_resolution.size
  #read binary file using 'rb' command
   with open(fname, 'rb') as f:
-  	#raw is the information read in file. 
     raw = f.read()
-    #size is the length of raw divided by 4 because its binary, and the data is in float32, 4bytes
     size = len(raw)/4
-    #ndarray is an n dimensional array. 
-    #nchan is the number of channels
-    #size/nchan is the time. 
-    #ints is the time vs channel vs data array in type <i2 = np.int16 order in column major order and buffer Used to fill the array with data.
+    '''
+    this assumes we will have a multiplex file
+    floats = np.fromfile(f,dtype=np.float32)
+    #floats = np.reshape(floats,(nchan,len(floats)/nchan))
+    floats = np.reshape(floats,(nchan,len(floats)/nchan))
+    '''
     floats = np.ndarray((nchan, size/nchan), dtype=np.float32, order='F', buffer=raw)
+    return [floats[i]*float(chan_resolution[i]) for i in xrange(nchan)]
     #results = []
         #results.append(floats[i]*chan_resolution[i])
     #print chan_resolution.T.astype(float)
-    return   floats
-    #return floats*chan_resolution.T
  
 def read_markers(fname):
   with open(fname) as f:
