@@ -16,10 +16,10 @@ import cPickle as pickle
 # - verify units for resolution in UTF8
  
 log = logging.getLogger('__main__')
-def band_filter(data,low,high,freq):
-    freq_data = np.fft.rfftfreq(len(data))
-    fft_data = np.fft.rfft(data)
-    return np.fft.irfft(np.where(np.logical_and(freq_data>low,freq_data<high)),fft_data,0)
+def band_filter(data,low,high,sample_rate):
+    freq_data = np.fft.fftfreq(len(data))
+    fft_data = np.fft.fft(data,1./sample_rate)
+    return np.fft.ifft(np.where(np.logical_and(freq_data>low,freq_data<high),fft_data,0))
 
 
 def read_header(fname):
