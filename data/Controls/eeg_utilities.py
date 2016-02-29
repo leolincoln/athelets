@@ -16,7 +16,12 @@ import cPickle as pickle
 # - verify units for resolution in UTF8
  
 log = logging.getLogger('__main__')
- 
+def band_filter(data,low,high,freq):
+    freq_data = np.fft.rfftfreq(len(data))
+    fft_data = np.fft.rfft(data)
+    return np.fft.irfft(np.where(np.logical_and(freq_data>low,freq_data<high)),fft_data,0)
+
+
 def read_header(fname):
   with open(fname) as f:
     linNum =0
@@ -339,8 +344,9 @@ def min1(sample_rate = 1000,folder_name=None):
         pickle.dump(min1_wfft, open(folder_name+'/_'+str(subject_num)+'.wfft','w'))
         
 if __name__ == '__main__':
-    folderName = None
-    if len(sys.argv)>=2:
-        folderName = sys.argv[1]
-    main(search_folder = folderName)
+    pass
+    #folderName = None
+    #if len(sys.argv)>=2:
+    #    folderName = sys.argv[1]
+    #main(search_folder = folderName)
     #min1()
